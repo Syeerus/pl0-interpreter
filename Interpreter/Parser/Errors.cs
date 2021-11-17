@@ -76,18 +76,4 @@ namespace Interpreter.Parser
         /// <param name="message">Error message.</param>
         public UnterminatedStringError(int line, int column, string message) : base(line, column, message) { }
     }
-
-    /// <summary>
-    /// Error for malformed float.
-    /// </summary>
-    public class MalformedFloatError : BaseError
-    {
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="line">Line position of the error.</param>
-        /// <param name="column">Column position of the error.</param>
-        /// <param name="message">Error message.</param>
-        public MalformedFloatError(int line, int column, string message) : base(line, column, message) { }
-    }
 }

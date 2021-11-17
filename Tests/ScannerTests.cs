@@ -236,16 +236,16 @@ namespace Tests
             };
             TokensAreEqual(scanner, expected);
 
-            // Invalid
+            // Invalid or partial.
             scanner = new Scanner("00.2 0.");
             expected = new Token[]
             {
                 new Token(TokenType.Integer, 0, 1, 1, "0"),
                 new Token(TokenType.Dot, 2, 1, 3),
                 new Token(TokenType.Integer, 3, 1, 4, "2"),
+                new Token(TokenType.Float, 5, 1, 6, "0.0")
             };
             TokensAreEqual(scanner, expected);
-            Assert.ThrowsException<MalformedFloatError>(() => { scanner.GetNext(); });
         }
 
         [TestMethod]

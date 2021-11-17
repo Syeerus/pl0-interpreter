@@ -67,7 +67,6 @@ namespace Interpreter.Parser
         /// </summary>
         /// <returns>The next token or null if at the end of the source string.</returns>
         /// <exception cref="UnterminatedStringError">Raised when an unterminated string is encountered.</exception>
-        /// <exception cref="MalformedFloatError">Raised when a malformed float is encountered.</exception>
         public Token GetNext()
         {
             SkipWhiteSpace();
@@ -234,7 +233,6 @@ namespace Interpreter.Parser
         /// Gets a number token. Advances the offset position.
         /// </summary>
         /// <returns>A number token.</returns>
-        /// <exception cref="MalformedFloatError">Raised when a malformed float is encountered.</exception>
         private Token GetNumber()
         {
             Token token;
@@ -269,7 +267,6 @@ namespace Interpreter.Parser
                     else if (c2 == '.')
                     {
                         token = GetIntegerOrFloat();
-                        Advance(token.Value.Length);
                     }
                     else
                     {
@@ -282,7 +279,6 @@ namespace Interpreter.Parser
             else
             {
                 token = GetIntegerOrFloat();
-                Advance(token.Value.Length);
             }
 
             return token;
@@ -343,22 +339,21 @@ namespace Interpreter.Parser
         }
 
         /// <summary>
-        /// Gets an integer or float token. Doesn't move the offset position.
+        /// Gets an integer or float token. Advances the offset position.
         /// </summary>
         /// <returns>An integer or float token.</returns>
-        /// <exception cref="MalformedFloatError">Raised when a malformed float is encountered.</exception>
         private Token GetIntegerOrFloat()
         {
             int n = 1;      // Offset position.
-            bool isFloat = false;
+            TokenType type = TokenType.Integer;
             while (!IsAtEnd(n))
             {
                 char c = Read(n);
                 if (!IsDigit(c))
                 {
-                    if (c == '.' && !isFloat)
+                    if (c == '.' && type == TokenType.Integer)
                     {
-                        isFloat = true;
+                        type = TokenType.Float;
                     }
                     else
                     {
@@ -369,17 +364,15 @@ namespace Interpreter.Parser
             }
 
             string numStr = Source.Substring(_offset, n);
-            if (isFloat)
+            if (type == TokenType.Float && numStr[numStr.Length - 1] == '.')
             {
-                if (numStr[numStr.Length - 1] == '.')
-                {
-                    throw new MalformedFloatError(_line, _column, "Malformed float.");
-                }
-
-                return CreateToken(TokenType.Float, numStr);
+                // Assume fractional part of float.
+                numStr += '0';
             }
 
-            return CreateToken(TokenType.Integer, numStr);
+            Token token = CreateToken(type, numStr);
+            Advance(n);
+            return token;
         }
 
         /// <summary>
