@@ -43,6 +43,13 @@ namespace Tests
         }
 
         [TestMethod]
+        public void EndOfSourceTest()
+        {
+            var scanner = new Scanner("  ");
+            Assert.IsTrue(scanner.GetNext() == null);
+        }
+
+        [TestMethod]
         public void IdentifiersTest()
         {
             var scanner = new Scanner("Hello _world a1234");
