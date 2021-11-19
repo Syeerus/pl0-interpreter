@@ -34,7 +34,7 @@ namespace Interpreter.Parser
         /// <summary>
         /// The source code given to the scanner.
         /// </summary>
-        public string Source { get; }
+        public readonly string Source;
 
         /// <summary>
         /// Current offset position in the source string.
