@@ -29,7 +29,7 @@ namespace Interpreter.Parser
     /// <summary>
     /// Base parser error class.
     /// </summary>
-    public abstract class BaseError : Exception
+    public abstract class Error : Exception
     {
         /// <summary>
         /// Line position of the error.
@@ -47,7 +47,7 @@ namespace Interpreter.Parser
         /// <param name="line">Line position of the error.</param>
         /// <param name="column">Column position of the error.</param>
         /// <param name="message">Error message.</param>
-        public BaseError(int line, int column, string message) : base(message)
+        public Error(int line, int column, string message) : base(message)
         {
             Line = line;
             Column = column;
@@ -66,7 +66,7 @@ namespace Interpreter.Parser
     /// <summary>
     /// Error for an unterminated string.
     /// </summary>
-    public class UnterminatedStringError : BaseError
+    public class UnterminatedStringError : Error
     {
         /// <summary>
         /// Constructor.
@@ -75,5 +75,19 @@ namespace Interpreter.Parser
         /// <param name="column">Column position of the error.</param>
         /// <param name="message">Error message.</param>
         public UnterminatedStringError(int line, int column, string message) : base(line, column, message) { }
+    }
+
+    /// <summary>
+    /// Error for improper syntax.
+    /// </summary>
+    public class SyntaxError : Error
+    {
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="line">Line position of the error.</param>
+        /// <param name="column">Column position of the error.</param>
+        /// <param name="message">Error message.</param>
+        public SyntaxError(int line, int column, string message) : base(line, column, message) { }
     }
 }
