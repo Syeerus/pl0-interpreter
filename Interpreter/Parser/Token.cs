@@ -66,6 +66,7 @@ namespace Interpreter.Parser
         Odd,
         While,
         Do,
+        EndOfSource
     }
 
     /// <summary>

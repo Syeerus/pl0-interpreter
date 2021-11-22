@@ -46,7 +46,11 @@ namespace Tests
         public void EndOfSourceTest()
         {
             var scanner = new Scanner("  ");
-            Assert.IsTrue(scanner.GetNext() == null);
+            var expected = new Token[]
+            {
+                new Token(TokenType.EndOfSource, 2, 1, 3)
+            };
+            TokensAreEqual(scanner, expected);
         }
 
         [TestMethod]

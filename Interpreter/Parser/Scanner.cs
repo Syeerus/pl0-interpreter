@@ -65,14 +65,14 @@ namespace Interpreter.Parser
         /// <summary>
         /// Gets the next token in the source string.
         /// </summary>
-        /// <returns>The next token or null if at the end of the source string.</returns>
+        /// <returns>The next token or EndOfSource token if at the end of the source string.</returns>
         /// <exception cref="UnterminatedStringError">Raised when an unterminated string is encountered.</exception>
         public Token GetNext()
         {
             SkipWhiteSpace();
             if (IsAtEnd())
             {
-                return null;
+                return CreateToken(TokenType.EndOfSource);
             }
 
             Token token;
