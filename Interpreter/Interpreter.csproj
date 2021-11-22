@@ -36,7 +36,24 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Parser\AST\BinaryExpressionNode.cs" />
+    <Compile Include="Parser\AST\BlockStatementNode.cs" />
+    <Compile Include="Parser\AST\CallExpressionNode.cs" />
+    <Compile Include="Parser\AST\InputStatementNode.cs" />
+    <Compile Include="Parser\AST\PrintStatementNode.cs" />
+    <Compile Include="Parser\AST\ProcedureDeclarationNode.cs" />
+    <Compile Include="Parser\AST\LiteralNode.cs" />
+    <Compile Include="Parser\AST\Node.cs" />
+    <Compile Include="Parser\AST\ConditionNode.cs" />
+    <Compile Include="Parser\AST\IdentifierNode.cs" />
+    <Compile Include="Parser\AST\ProgramNode.cs" />
+    <Compile Include="Parser\AST\UnaryExpressionNode.cs" />
+    <Compile Include="Parser\AST\VariableDeclarationNode.cs" />
+    <Compile Include="Parser\AST\VariableDeclarationsNode.cs" />
+    <Compile Include="Parser\AST\WhileStatementNodecs.cs" />
+    <Compile Include="Parser\DataType.cs" />
     <Compile Include="Parser\Errors.cs" />
+    <Compile Include="Parser\Parser.cs" />
     <Compile Include="Parser\Scanner.cs" />
     <Compile Include="Parser\Token.cs" />
     <Compile Include="Program.cs" />
@@ -45,5 +62,6 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
