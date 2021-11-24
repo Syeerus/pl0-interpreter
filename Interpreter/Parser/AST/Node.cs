@@ -63,7 +63,7 @@
         /// <returns>The node converted to a string.</returns>
         public override string ToString()
         {
-            return $"[{this.GetType().FullName}, off: {Offset}, line: {Line}, col: {Column}]";
+            return $"[{GetType().Name}, off: {Offset}, line: {Line}, col: {Column}]";
         }
     }
 }

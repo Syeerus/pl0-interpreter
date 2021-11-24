@@ -27,8 +27,7 @@ namespace Interpreter.Parser.AST
     /// <summary>
     /// Literal node of an AST.
     /// </summary>
-    /// <typeparam name="T">Type to store as the Value property.</typeparam>
-    public class LiteralNode<T> : Node
+    public class LiteralNode : Node
     {
         /// <summary>
         /// Type of the literal.
@@ -36,9 +35,9 @@ namespace Interpreter.Parser.AST
         public readonly DataType Type;
 
         /// <summary>
-        /// Value of the node.
+        /// Value of the node stored as a string.
         /// </summary>
-        public T Value;
+        public string Value;
 
         /// <summary>
         /// Constructor.
@@ -47,11 +46,20 @@ namespace Interpreter.Parser.AST
         /// <param name="line">Starting line in the source string.</param>
         /// <param name="column">Starting column in the source string.</param>
         /// <param name="type">Type of the literal.</param>
-        /// <param name="val">Value of the node.</param>
-        public LiteralNode(int offset, int line, int column, DataType type, T val) : base(offset, line, column)
+        /// <param name="val">String value of the literal.</param>
+        public LiteralNode(int offset, int line, int column, DataType type, string val) : base(offset, line, column)
         {
             Type = type;
             Value = val;
+        }
+
+        /// <summary>
+        /// Overridden for debugging purposes.
+        /// </summary>
+        /// <returns>The node converted to a string.</returns>
+        public override string ToString()
+        {
+            return $"[{GetType().Name}, off: {Offset}, line: {Line}, col: {Column}, type: {Type}, val: \"{Value}\"]";
         }
     }
 }

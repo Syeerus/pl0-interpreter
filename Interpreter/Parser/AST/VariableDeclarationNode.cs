@@ -37,7 +37,7 @@ namespace Interpreter.Parser.AST
         /// <summary>
         /// If the variable should be marked constant.
         /// </summary>
-        public readonly bool Constant;
+        public readonly bool IsConstant;
 
         /// <summary>
         /// The value in AST form.
@@ -53,7 +53,7 @@ namespace Interpreter.Parser.AST
         /// <param name="constant">If the variable should be marked as constant.</param>
         public VariableDeclarationNode(int offset, int line, int column, bool constant = false) : base(offset, line, column)
         {
-            Constant = constant;
+            IsConstant = constant;
         }
 
         /// <summary>
@@ -62,7 +62,8 @@ namespace Interpreter.Parser.AST
         /// <returns>The node converted to a string.</returns>
         public override string ToString()
         {
-            return base.ToString() + $": {Name} = {Value}";
+            string constStr = (IsConstant ? "CONST" : "");
+            return base.ToString() + $" {constStr} {Name} = {Value}";
         }
     }
 }
