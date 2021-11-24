@@ -168,7 +168,7 @@ namespace Interpreter.Parser
             var declarations = new VariableDeclarationsNode(t.Offset, t.Line, t.Column);
             while (true)
             {
-                Advance();
+                t = Advance();
                 AssertMatches(TokenType.Identifier);
                 var constant = new VariableDeclarationNode(t.Offset, t.Line, t.Column, true);
                 constant.Name = t.Value;
@@ -178,13 +178,13 @@ namespace Interpreter.Parser
                 switch (t.Type)
                 {
                     case TokenType.Integer:
-                        var val = new LiteralNode<int>(t.Offset, t.Line, t.Column, DataType.Integer, Convert.ToInt32(t.Value));
+                        constant.Value = new LiteralNode(t.Offset, t.Line, t.Column, DataType.Integer, t.Value);
                         break;
                     case TokenType.Float:
-                        constant.Value = new LiteralNode<float>(t.Offset, t.Line, t.Column, DataType.Float, float.Parse(t.Value));
+                        constant.Value = new LiteralNode(t.Offset, t.Line, t.Column, DataType.Float, t.Value);
                         break;
                     case TokenType.String:
-                        constant.Value = new LiteralNode<string>(t.Offset, t.Line, t.Column, DataType.String, t.Value);
+                        constant.Value = new LiteralNode(t.Offset, t.Line, t.Column, DataType.String, t.Value);
                         break;
                     default:
                         throw new SyntaxError(t.Line, t.Column, $"Expected an integer, float, or string, but got '{t.Type}'");
@@ -219,9 +219,8 @@ namespace Interpreter.Parser
             var declarations = new VariableDeclarationsNode(t.Offset, t.Line, t.Column);
             while (true)
             {
-                Advance();
-                AssertMatches(TokenType.Identifier);
                 t = Advance();
+                AssertMatches(TokenType.Identifier);
                 var variable = new VariableDeclarationNode(t.Offset, t.Line, t.Column);
                 variable.Name = t.Value;
 

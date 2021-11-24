@@ -53,8 +53,25 @@ namespace Tests
         [TestMethod]
         public void ConstantsTest()
         {
-            var parser = new Parser("const a = 1;.");
+            var parser = new Parser("const a = 1, b = 2.2, c = 'Hello World';.");
             ProgramNode program = parser.Parse();
+            Console.WriteLine("Parsing \"" + parser.Source + "\"");
+            Console.WriteLine(program);
+        }
+
+        [TestMethod]
+        public void InvalidConstantsTest()
+        {
+            var parser = new Parser("const a, b = 2;.");
+            Assert.ThrowsException<SyntaxError>(() => parser.Parse());
+        }
+
+        [TestMethod]
+        public void VariablesTest()
+        {
+            var parser = new Parser("var a, b, c;.");
+            ProgramNode program = parser.Parse();
+            Console.WriteLine("Parsing \"" + parser.Source + "\"");
             Console.WriteLine(program);
         }
     }
