@@ -51,9 +51,9 @@ namespace Interpreter.Parser
         LeftParenthesis,    // (
         RightParenthesis,   // )
         Identifier,
-        Integer,
-        Float,
-        String,
+        IntegerLiteral,
+        FloatLiteral,
+        StringLiteral,
         // Keywords
         Const,
         Var,

@@ -120,7 +120,7 @@ namespace Tests
             var scanner = new Scanner("'This is a string.'");
             Token[] expected =
             {
-                new Token(TokenType.String, 0, 1, 1, "This is a string.")
+                new Token(TokenType.StringLiteral, 0, 1, 1, "This is a string.")
             };
             TokensAreEqual(scanner, expected);
 
@@ -128,7 +128,7 @@ namespace Tests
             scanner = new Scanner("\"This is a string.\"");
             expected = new Token[]
             {
-                new Token(TokenType.String, 0, 1, 1, "This is a string.")
+                new Token(TokenType.StringLiteral, 0, 1, 1, "This is a string.")
             };
             TokensAreEqual(scanner, expected);
 
@@ -136,8 +136,8 @@ namespace Tests
             scanner = new Scanner("\"This is a string.\" 'This is another.'");
             expected = new Token[]
             {
-                new Token(TokenType.String, 0, 1, 1, "This is a string."),
-                new Token(TokenType.String, 20, 1, 21, "This is another.")
+                new Token(TokenType.StringLiteral, 0, 1, 1, "This is a string."),
+                new Token(TokenType.StringLiteral, 20, 1, 21, "This is another.")
             };
             TokensAreEqual(scanner, expected);
         }
@@ -148,7 +148,7 @@ namespace Tests
             var scanner = new Scanner("'Hello\nWorld.'");
             Token[] expected =
             {
-                new Token(TokenType.String, 0, 1, 1, "Hello\nWorld.")
+                new Token(TokenType.StringLiteral, 0, 1, 1, "Hello\nWorld.")
             };
             TokensAreEqual(scanner, expected);
         }
@@ -159,7 +159,7 @@ namespace Tests
             var scanner = new Scanner("'Hello\\t\\nworld.'");
             Token[] expected =
             {
-                new Token(TokenType.String, 0, 1, 1, "Hello\\t\\nworld.")
+                new Token(TokenType.StringLiteral, 0, 1, 1, "Hello\\t\\nworld.")
             };
             TokensAreEqual(scanner, expected);
         }
@@ -171,9 +171,9 @@ namespace Tests
             var scanner = new Scanner("1 23 456");
             Token[] expected =
             {
-                new Token(TokenType.Integer, 0, 1, 1, "1"),
-                new Token(TokenType.Integer, 2, 1, 3, "23"),
-                new Token(TokenType.Integer, 5, 1, 6, "456")
+                new Token(TokenType.IntegerLiteral, 0, 1, 1, "1"),
+                new Token(TokenType.IntegerLiteral, 2, 1, 3, "23"),
+                new Token(TokenType.IntegerLiteral, 5, 1, 6, "456")
             };
             TokensAreEqual(scanner, expected);
         }
@@ -185,9 +185,9 @@ namespace Tests
             var scanner = new Scanner("0x1 0xff 0x1abcde");
             Token[] expected =
             {
-                new Token(TokenType.Integer, 0, 1, 1, "1"),
-                new Token(TokenType.Integer, 4, 1, 5, "255"),
-                new Token(TokenType.Integer, 9, 1, 10, "1752286")
+                new Token(TokenType.IntegerLiteral, 0, 1, 1, "1"),
+                new Token(TokenType.IntegerLiteral, 4, 1, 5, "255"),
+                new Token(TokenType.IntegerLiteral, 9, 1, 10, "1752286")
             };
             TokensAreEqual(scanner, expected);
         }
@@ -198,9 +198,9 @@ namespace Tests
             var scanner = new Scanner("0b1 0b11 0b10101");
             Token[] expected =
             {
-                new Token(TokenType.Integer, 0, 1, 1, "1"),
-                new Token(TokenType.Integer, 4, 1, 5, "3"),
-                new Token(TokenType.Integer, 9, 1, 10, "21")
+                new Token(TokenType.IntegerLiteral, 0, 1, 1, "1"),
+                new Token(TokenType.IntegerLiteral, 4, 1, 5, "3"),
+                new Token(TokenType.IntegerLiteral, 9, 1, 10, "21")
             };
             TokensAreEqual(scanner, expected);
 
@@ -208,7 +208,7 @@ namespace Tests
             scanner = new Scanner("0b2");
             expected = new Token[]
             {
-                new Token(TokenType.Integer, 0, 1, 1, "0"),
+                new Token(TokenType.IntegerLiteral, 0, 1, 1, "0"),
                 new Token(TokenType.Identifier, 1, 1, 2, "b2")
             };
             TokensAreEqual(scanner, expected);
@@ -220,9 +220,9 @@ namespace Tests
             var scanner = new Scanner("01 023 04567");
             Token[] expected =
             {
-                new Token(TokenType.Integer, 0, 1, 1, "1"),
-                new Token(TokenType.Integer, 3, 1, 4, "19"),
-                new Token(TokenType.Integer, 7, 1, 8, "2423")
+                new Token(TokenType.IntegerLiteral, 0, 1, 1, "1"),
+                new Token(TokenType.IntegerLiteral, 3, 1, 4, "19"),
+                new Token(TokenType.IntegerLiteral, 7, 1, 8, "2423")
             };
             TokensAreEqual(scanner, expected);
 
@@ -230,8 +230,8 @@ namespace Tests
             scanner = new Scanner("08");
             expected = new Token[]
             {
-                new Token(TokenType.Integer, 0, 1, 1, "0"),
-                new Token(TokenType.Integer, 1, 1, 2, "8")
+                new Token(TokenType.IntegerLiteral, 0, 1, 1, "0"),
+                new Token(TokenType.IntegerLiteral, 1, 1, 2, "8")
             };
             TokensAreEqual(scanner, expected);
         }
@@ -242,8 +242,8 @@ namespace Tests
             var scanner = new Scanner("0.1 23.45");
             Token[] expected =
             {
-                new Token(TokenType.Float, 0, 1, 1, "0.1"),
-                new Token(TokenType.Float, 4, 1, 5, "23.45")
+                new Token(TokenType.FloatLiteral, 0, 1, 1, "0.1"),
+                new Token(TokenType.FloatLiteral, 4, 1, 5, "23.45")
             };
             TokensAreEqual(scanner, expected);
 
@@ -251,10 +251,10 @@ namespace Tests
             scanner = new Scanner("00.2 0.");
             expected = new Token[]
             {
-                new Token(TokenType.Integer, 0, 1, 1, "0"),
+                new Token(TokenType.IntegerLiteral, 0, 1, 1, "0"),
                 new Token(TokenType.Dot, 2, 1, 3),
-                new Token(TokenType.Integer, 3, 1, 4, "2"),
-                new Token(TokenType.Float, 5, 1, 6, "0.0")
+                new Token(TokenType.IntegerLiteral, 3, 1, 4, "2"),
+                new Token(TokenType.FloatLiteral, 5, 1, 6, "0.0")
             };
             TokensAreEqual(scanner, expected);
         }

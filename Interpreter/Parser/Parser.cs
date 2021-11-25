@@ -177,13 +177,13 @@ namespace Interpreter.Parser
                 t = Advance();
                 switch (t.Type)
                 {
-                    case TokenType.Integer:
+                    case TokenType.IntegerLiteral:
                         constant.Value = new LiteralNode(t.Offset, t.Line, t.Column, DataType.Integer, t.Value);
                         break;
-                    case TokenType.Float:
+                    case TokenType.FloatLiteral:
                         constant.Value = new LiteralNode(t.Offset, t.Line, t.Column, DataType.Float, t.Value);
                         break;
-                    case TokenType.String:
+                    case TokenType.StringLiteral:
                         constant.Value = new LiteralNode(t.Offset, t.Line, t.Column, DataType.String, t.Value);
                         break;
                     default:

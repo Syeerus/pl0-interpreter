@@ -244,7 +244,7 @@ namespace Interpreter.Parser
                 {
                     // Octal
                     string octStr = GetOctalStr();
-                    token = CreateToken(TokenType.Integer, Convert.ToInt32(octStr, 8).ToString());
+                    token = CreateToken(TokenType.IntegerLiteral, Convert.ToInt32(octStr, 8).ToString());
                     Advance(octStr.Length);
                 }
                 else
@@ -254,14 +254,14 @@ namespace Interpreter.Parser
                     {
                         // Hexadecimal
                         string hexStr = GetHexadecimalStr();
-                        token = CreateToken(TokenType.Integer, Convert.ToInt32(hexStr, 16).ToString());
+                        token = CreateToken(TokenType.IntegerLiteral, Convert.ToInt32(hexStr, 16).ToString());
                         Advance(hexStr.Length);
                     }
                     else if (c2 == 'b' && IsBinary(c3))
                     {
                         // Binary
                         string binStr = GetBinaryStr();
-                        token = CreateToken(TokenType.Integer, Convert.ToInt32(binStr, 2).ToString());
+                        token = CreateToken(TokenType.IntegerLiteral, Convert.ToInt32(binStr, 2).ToString());
                         Advance(binStr.Length + 2);
                     }
                     else if (c2 == '.')
@@ -271,7 +271,7 @@ namespace Interpreter.Parser
                     else
                     {
                         // Zero
-                        token = CreateToken(TokenType.Integer, "0");
+                        token = CreateToken(TokenType.IntegerLiteral, "0");
                         Advance();
                     }
                 }
@@ -345,15 +345,15 @@ namespace Interpreter.Parser
         private Token GetIntegerOrFloat()
         {
             int n = 1;      // Offset position.
-            TokenType type = TokenType.Integer;
+            TokenType type = TokenType.IntegerLiteral;
             while (!IsAtEnd(n))
             {
                 char c = Read(n);
                 if (!IsDigit(c))
                 {
-                    if (c == '.' && type == TokenType.Integer)
+                    if (c == '.' && type == TokenType.IntegerLiteral)
                     {
-                        type = TokenType.Float;
+                        type = TokenType.FloatLiteral;
                     }
                     else
                     {
@@ -364,7 +364,7 @@ namespace Interpreter.Parser
             }
 
             string numStr = Source.Substring(_offset, n);
-            if (type == TokenType.Float && numStr[numStr.Length - 1] == '.')
+            if (type == TokenType.FloatLiteral && numStr[numStr.Length - 1] == '.')
             {
                 // Assume fractional part of float.
                 numStr += '0';
@@ -501,7 +501,7 @@ namespace Interpreter.Parser
 
             ++n;        // Skip end quote.
 
-            Token token = CreateToken(TokenType.String, startLine, startColumn, Source.Substring(_offset + 1, n - 2));
+            Token token = CreateToken(TokenType.StringLiteral, startLine, startColumn, Source.Substring(_offset + 1, n - 2));
             Advance(n);
             return token;
         }
