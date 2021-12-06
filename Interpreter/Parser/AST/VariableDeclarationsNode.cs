@@ -53,7 +53,7 @@ namespace Interpreter.Parser.AST
             string output = base.ToString();
             foreach (VariableDeclarationNode node in Declarations)
             {
-                output += "\n" + node.ToString();
+                output += "\n- " + node.ToString();
             }
 
             return output;

@@ -1,5 +1,5 @@
 ﻿/**
- * Class for the while statement node.
+ * Class for the call expression node.
  * 
  * Copyright (c) 2021 Syeerus
  *
@@ -25,19 +25,14 @@
 namespace Interpreter.Parser.AST
 {
     /// <summary>
-    /// While statement node of an AST.
+    /// Call expression for an AST.
     /// </summary>
-    public class WhileStatementNode : Node
+    public class CallStatementNode : Node
     {
         /// <summary>
-        /// Condition to check before executing the body.
+        /// Identifier of the procedure to call.
         /// </summary>
-        public ConditionNode Condition;
-
-        /// <summary>
-        /// The body that is executed when the condition is true.
-        /// </summary>
-        public Node Body;
+        public IdentifierNode Identifier;
 
         /// <summary>
         /// Constructor.
@@ -45,6 +40,20 @@ namespace Interpreter.Parser.AST
         /// <param name="offset">Starting offset of the source string.</param>
         /// <param name="line">Starting line of the source string.</param>
         /// <param name="column">Starting column of the source string.</param>
-        public WhileStatementNode(int offset, int line, int column) : base(offset, line, column) { }
+        public CallStatementNode(int offset, int line, int column) : base(offset, line, column) { }
+
+        /// <summary>
+        /// Overridden for debugging purposes.
+        /// </summary>
+        /// <returns>The node converted to a string.</returns>
+        public override string ToString()
+        {
+            if (Identifier == null)
+            {
+                return base.ToString();
+            }
+
+            return base.ToString() + "\nCaller = " + Identifier.ToString();
+        }
     }
 }

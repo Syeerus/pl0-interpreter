@@ -69,5 +69,25 @@ namespace Interpreter.Parser.AST
         /// <param name="line">Starting line of the source string.</param>
         /// <param name="column">Starting column of the source string.</param>
         public BinaryExpressionNode(int offset, int line, int column) : base(offset, line, column) { }
+
+        /// <summary>
+        /// Overridden for debugging purposes.
+        /// </summary>
+        /// <returns>The node converted to a string.</returns>
+        public override string ToString()
+        {
+            string output = $"[{GetType().Name}, off: {Offset}, line: {Line}, col: {Column}, op: {Operator}]";
+            if (Left != null)
+            {
+                output += "\nLeft = " + Left.ToString();
+            }
+
+            if (Right != null)
+            {
+                output += "\nRight = " + Right.ToString();
+            }
+
+            return output;
+        }
     }
 }

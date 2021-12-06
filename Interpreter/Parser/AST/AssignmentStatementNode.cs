@@ -1,5 +1,5 @@
 ﻿/**
- * Class for the print statement node.
+ * Class for the assignment statement node.
  * 
  * Copyright (c) 2021 Syeerus
  *
@@ -25,22 +25,28 @@
 namespace Interpreter.Parser.AST
 {
     /// <summary>
-    /// Print statement node for an AST.
+    /// Assignment AST node.
     /// </summary>
-    public class PrintStatementNode : Node
+    public class AssignmentStatementNode : Node
     {
         /// <summary>
-        /// The expression to print.
+        /// The identifier.
         /// </summary>
-        public Node Expression;
+        public IdentifierNode Identifier;
+
+        /// <summary>
+        /// Expression value.
+        /// </summary>
+        public Node Value;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="offset">Starting offset of the source string.</param>
-        /// <param name="line">Starting line of the source string.</param>
-        /// <param name="column">Starting column of the source string.</param>
-        public PrintStatementNode(int offset, int line, int column) : base(offset, line, column) { }
+        /// <param name="offset">Starting offset in the source string.</param>
+        /// <param name="line">Starting line in the source string.</param>
+        /// <param name="column">Starting column in the source string.</param>
+        /// <param name="name">Name of the identifier.</param>
+        public AssignmentStatementNode(int offset, int line, int column) : base(offset, line, column) { }
 
         /// <summary>
         /// Overridden for debugging purposes.
@@ -49,9 +55,14 @@ namespace Interpreter.Parser.AST
         public override string ToString()
         {
             string output = base.ToString();
-            if (Expression != null)
+            if (Identifier != null)
             {
-                output += "\nExpression = " + Expression.ToString();
+                output += "\nIdentifier = " + Identifier.ToString();
+            }
+
+            if (Value != null)
+            {
+                output += "\nValue = " + Value.ToString();
             }
 
             return output;

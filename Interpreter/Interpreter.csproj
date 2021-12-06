@@ -36,9 +36,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Parser\AST\AssignmentStatementNode.cs" />
     <Compile Include="Parser\AST\BinaryExpressionNode.cs" />
     <Compile Include="Parser\AST\BlockStatementNode.cs" />
-    <Compile Include="Parser\AST\CallExpressionNode.cs" />
+    <Compile Include="Parser\AST\CallStatementNode.cs" />
+    <Compile Include="Parser\AST\IfStatementNode.cs" />
     <Compile Include="Parser\AST\InputStatementNode.cs" />
     <Compile Include="Parser\AST\PrintStatementNode.cs" />
     <Compile Include="Parser\AST\ProcedureDeclarationNode.cs" />
@@ -50,7 +52,7 @@
     <Compile Include="Parser\AST\UnaryExpressionNode.cs" />
     <Compile Include="Parser\AST\VariableDeclarationNode.cs" />
     <Compile Include="Parser\AST\VariableDeclarationsNode.cs" />
-    <Compile Include="Parser\AST\WhileStatementNodecs.cs" />
+    <Compile Include="Parser\AST\WhileStatementNode.cs" />
     <Compile Include="Parser\DataType.cs" />
     <Compile Include="Parser\Errors.cs" />
     <Compile Include="Parser\Parser.cs" />

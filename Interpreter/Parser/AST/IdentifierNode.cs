@@ -32,7 +32,7 @@ namespace Interpreter.Parser.AST
         /// <summary>
         /// The name of the identifier.
         /// </summary>
-        public readonly string Name;
+        public string Name;
 
         /// <summary>
         /// Constructor.
@@ -40,10 +40,15 @@ namespace Interpreter.Parser.AST
         /// <param name="offset">Starting offset of the source string.</param>
         /// <param name="line">Starting line of the source string.</param>
         /// <param name="column">Starting column of the source string.</param>
-        /// <param name="identifier">The name of the identifier.</param>
-        public IdentifierNode(int offset, int line, int column, string identifier) : base(offset, line, column)
+        public IdentifierNode(int offset, int line, int column) : base(offset, line, column) { }
+
+        /// <summary>
+        /// Overridden for debugging purposes.
+        /// </summary>
+        /// <returns>The node converted to a string.</returns>
+        public override string ToString()
         {
-            Name = identifier;
+            return $"[{GetType().Name}, off: {Offset}, line: {Line}, col: {Column}, name: \"{Name}\"]";
         }
     }
 }

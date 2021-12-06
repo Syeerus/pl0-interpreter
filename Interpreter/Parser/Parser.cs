@@ -128,32 +128,189 @@ namespace Interpreter.Parser
                 return null;
             }
 
+            Token t = _currentToken;
             if (Matches(TokenType.Identifier))
             {
+                var assignment = new AssignmentStatementNode(t.Offset, t.Line, t.Column);
+                assignment.Identifier = new IdentifierNode(t.Offset, t.Line, t.Column);
+                assignment.Identifier.Name = t.Value;
                 Advance();
                 AssertMatches(TokenType.ColonEquals);
-                // TODO
+                Advance();
+                assignment.Value = ParseExpression();
+                return assignment;
             }
             else if (Matches(TokenType.Call))
             {
-                Advance();
+                var call = new CallStatementNode(t.Offset, t.Line, t.Column);
+                t = Advance();
                 AssertMatches(TokenType.Identifier);
-                // TODO
+                call.Identifier = new IdentifierNode(t.Offset, t.Line, t.Column);
+                call.Identifier.Name = t.Value;
+                Advance();
+                return call;
             }
             else if (Matches(TokenType.QuestionMark))
             {
-                Advance();
+                var input = new InputStatementNode(t.Offset, t.Line, t.Column);
+                t = Advance();
                 AssertMatches(TokenType.Identifier);
-                // TODO
+                input.Identifier = new IdentifierNode(t.Offset, t.Line, t.Column);
+                input.Identifier.Name = t.Value;
+                Advance();
+                return input;
             }
             else if (Matches(TokenType.ExclamationMark))
             {
                 Advance();
                 // TODO
             }
+            else if (Matches(TokenType.Begin))
+            {
+                Advance();
+                // TODO
+            }
+            else if (Matches(TokenType.If))
+            {
+                var stmt = new IfStatementNode(t.Offset, t.Line, t.Column);
+                Advance();
+                stmt.Condition = ParseCondition();
+                AssertMatches(TokenType.Then);
+                Advance();
+                stmt.Body = ParseStatement();
+                return stmt;
+            }
+            else if (Matches(TokenType.While))
+            {
+                Advance();
+                // TODO
+            }
 
-            Token t = _currentToken;
             throw new SyntaxError(t.Line, t.Column, $"Unrecognized statement: {t.Type}");
+        }
+
+        /// <summary>
+        /// Parses a condition.
+        /// </summary>
+        /// <returns>An AST condition node.</returns>
+        private ConditionNode ParseCondition()
+        {
+            Token t = _currentToken;
+            var condition = new ConditionNode(t.Offset, t.Line, t.Column);
+            if (Matches(TokenType.Odd))
+            {
+                condition.HasOdd = true;
+                Advance();
+                condition.Left = ParseExpression();
+            }
+            else
+            {
+                condition.Left = ParseExpression();
+                t = _currentToken;
+                if (!IsConditionalOperator(t))
+                {
+                    throw new SyntaxError(t.Line, t.Column, "Expected conditional operator.");
+                }
+
+                condition.Operator = (ConditionalOperator)t.Type;
+                Advance();
+                condition.Right = ParseExpression();
+            }
+
+            return condition;
+        }
+
+        /// <summary>
+        /// Parses an expression.
+        /// </summary>
+        /// <returns>An AST expression node.</returns>
+        private Node ParseExpression()
+        {
+            Node left = null;
+            Token t = _currentToken;
+            if (IsUnaryOperator(t))
+            {
+                var unary = new UnaryExpressionNode(t.Offset, t.Line, t.Column);
+                unary.Operator = (UnaryOperator)t.Type;
+                Advance();
+                unary.Expression = ParseTerm();
+                left = unary;
+            }
+            else
+            {
+                left = ParseTerm();
+            }
+
+            if (IsUnaryOperator(_currentToken))
+            {
+                var binary = new BinaryExpressionNode(t.Offset, t.Line, t.Column);
+                t = _currentToken;
+                binary.Left = left;
+                binary.Operator = (BinaryOperator)t.Type;
+                Advance();
+                binary.Right = ParseExpression();
+                return binary;
+            }
+            else
+            {
+                return left;
+            }
+
+            throw new SyntaxError(t.Line, t.Column, "Expected expression.");
+        }
+
+        /// <summary>
+        /// Parses a term of the grammar.
+        /// </summary>
+        /// <returns>A node representing a term.</returns>
+        private Node ParseTerm()
+        {
+            Token t = _currentToken;
+            Node left = ParseFactor();
+            if (IsBinaryOperator(_currentToken))
+            {
+                var binary = new BinaryExpressionNode(t.Offset, t.Line, t.Column);
+                t = _currentToken;
+                binary.Left = left;
+                binary.Operator = (BinaryOperator)t.Type;
+                Advance();
+                binary.Right = ParseTerm();
+                return binary;
+            }
+
+            return left;
+        }
+
+        /// <summary>
+        /// Parses a factor of the grammar.
+        /// </summary>
+        /// <returns>A node representing a factor.</returns>
+        private Node ParseFactor()
+        {
+            Token t = _currentToken;
+            if (t.Type == TokenType.Identifier)
+            {
+                var ident = new IdentifierNode(t.Offset, t.Line, t.Column);
+                ident.Name = t.Value;
+                Advance();
+                return ident;
+            }
+            else if (IsLiteral(t))
+            {
+                var literal = new LiteralNode(t.Offset, t.Line, t.Column, GetLiteralDataType(t), t.Value);
+                Advance();
+                return literal;
+            }
+            else if (t.Type == TokenType.LeftParenthesis)
+            {
+                Advance();
+                Node node = ParseExpression();
+                AssertMatches(TokenType.RightParenthesis);
+                Advance();
+                return node;
+            }
+
+            throw new SyntaxError(t.Line, t.Column, "Expected identifier, literal, or expression.");
         }
 
         /// <summary>
@@ -254,7 +411,9 @@ namespace Interpreter.Parser
             t = Advance();
             AssertMatches(TokenType.Identifier);
             procedure.Name = t.Value;
+            Advance();
             AssertMatches(TokenType.Semicolon);
+            Advance();
             procedure.Body = ParseBlock();
             return procedure;
         }
@@ -266,6 +425,7 @@ namespace Interpreter.Parser
         /// <exception cref="UnterminatedStringError">Thrown if an unterminated string is encountered.</exception>
         private Token Advance()
         {
+            //Console.WriteLine("Advancing " + _currentToken);
             _currentToken = _scanner.GetNext();
             return _currentToken;
         }
@@ -285,6 +445,101 @@ namespace Interpreter.Parser
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Checks if a token is an unary operator.
+        /// </summary>
+        /// <param name="token">Token to check.</param>
+        /// <returns>If the token is an unary operator.</returns>
+        private bool IsUnaryOperator(Token token)
+        {
+            switch (token.Type)
+            {
+                case TokenType.Plus:
+                case TokenType.Minus:
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if a token is a binary operator.
+        /// </summary>
+        /// <param name="token">Token to check.</param>
+        /// <returns>If the token is a binary operator.</returns>
+        private bool IsBinaryOperator(Token token)
+        {
+            switch (token.Type)
+            {
+                case TokenType.Plus:
+                case TokenType.Minus:
+                case TokenType.Star:
+                case TokenType.Slash:
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if a token is a conditional operator.
+        /// </summary>
+        /// <param name="token">Token to check.</param>
+        /// <returns>If the token is a conditional operator.</returns>
+        private bool IsConditionalOperator(Token token)
+        {
+            switch (token.Type)
+            {
+                case TokenType.Equals:
+                case TokenType.Hash:
+                case TokenType.LessThan:
+                case TokenType.GreaterThan:
+                case TokenType.LessThanEquals:
+                case TokenType.GreaterThanEquals:
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if a token is a literal.
+        /// </summary>
+        /// <param name="token">Token to check.</param>
+        /// <returns>If the token is a literal.</returns>
+        private bool IsLiteral(Token token)
+        {
+            switch (token.Type)
+            {
+                case TokenType.IntegerLiteral:
+                case TokenType.FloatLiteral:
+                case TokenType.StringLiteral:
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Gets the data type of a literal token.
+        /// </summary>
+        /// <param name="token">Token to check.</param>
+        /// <returns>A corresponding data type.</returns>
+        private DataType GetLiteralDataType(Token token)
+        {
+            switch (token.Type)
+            {
+                case TokenType.IntegerLiteral:
+                    return DataType.Integer;
+                case TokenType.FloatLiteral:
+                    return DataType.Float;
+                case TokenType.StringLiteral:
+                    return DataType.String;
+            }
+
+            return DataType.Invalid;
         }
 
         /// <summary>

@@ -37,6 +37,7 @@ namespace Tests
         public void BlankSourceTest()
         {
             var parser = new Parser("");
+            Console.WriteLine("Parsing \"" + parser.Source + "\"");
             Assert.ThrowsException<SyntaxError>(() => { parser.Parse(); });
         }
 
@@ -44,6 +45,7 @@ namespace Tests
         public void SmallestProgramTest()
         {
             var parser = new Parser(".");
+            Console.WriteLine("Parsing \"" + parser.Source + "\"");
             ProgramNode program = parser.Parse();
             Console.WriteLine(program);
             var expected = new ProgramNode(0, 1, 1);
@@ -54,8 +56,8 @@ namespace Tests
         public void ConstantsTest()
         {
             var parser = new Parser("const a = 1, b = 2.2, c = 'Hello World';.");
-            ProgramNode program = parser.Parse();
             Console.WriteLine("Parsing \"" + parser.Source + "\"");
+            ProgramNode program = parser.Parse();
             Console.WriteLine(program);
         }
 
@@ -63,6 +65,7 @@ namespace Tests
         public void InvalidConstantsTest()
         {
             var parser = new Parser("const a, b = 2;.");
+            Console.WriteLine("Parsing \"" + parser.Source + "\"");
             Assert.ThrowsException<SyntaxError>(() => parser.Parse());
         }
 
@@ -70,9 +73,38 @@ namespace Tests
         public void VariablesTest()
         {
             var parser = new Parser("var a, b, c;.");
-            ProgramNode program = parser.Parse();
             Console.WriteLine("Parsing \"" + parser.Source + "\"");
+            ProgramNode program = parser.Parse();
             Console.WriteLine(program);
+        }
+
+        [TestMethod]
+        public void ProceduresTest()
+        {
+            var parser = new Parser("procedure _myProcedure; ;.");
+            Console.WriteLine("Parsing \"" + parser.Source + "\"");
+            ProgramNode program = parser.Parse();
+            Console.WriteLine(program);
+        }
+
+        [TestMethod]
+        public void ExpressionsTest()
+        {
+            var sources = new string[]
+            {
+                "var x; x := -(1 + 2).",
+                "var x; x := 1 + 2 * 3 - 4 / 5 .",
+                "var x; x := 1 + (2 - 3)."
+            };
+
+            foreach (string src in sources)
+            {
+                var parser = new Parser(src);
+                Console.WriteLine("Parsing \"" + src + "\"");
+                ProgramNode program = parser.Parse();
+                Console.WriteLine(program);
+                Console.WriteLine();
+            }
         }
     }
 }

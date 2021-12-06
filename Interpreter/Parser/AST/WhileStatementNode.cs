@@ -1,5 +1,5 @@
 ﻿/**
- * Class for the print statement node.
+ * Class for the while statement node.
  * 
  * Copyright (c) 2021 Syeerus
  *
@@ -25,14 +25,19 @@
 namespace Interpreter.Parser.AST
 {
     /// <summary>
-    /// Print statement node for an AST.
+    /// While statement node of an AST.
     /// </summary>
-    public class PrintStatementNode : Node
+    public class WhileStatementNode : Node
     {
         /// <summary>
-        /// The expression to print.
+        /// Condition to check before executing the body.
         /// </summary>
-        public Node Expression;
+        public ConditionNode Condition;
+
+        /// <summary>
+        /// The body that is executed when the condition is true.
+        /// </summary>
+        public Node Body;
 
         /// <summary>
         /// Constructor.
@@ -40,7 +45,7 @@ namespace Interpreter.Parser.AST
         /// <param name="offset">Starting offset of the source string.</param>
         /// <param name="line">Starting line of the source string.</param>
         /// <param name="column">Starting column of the source string.</param>
-        public PrintStatementNode(int offset, int line, int column) : base(offset, line, column) { }
+        public WhileStatementNode(int offset, int line, int column) : base(offset, line, column) { }
 
         /// <summary>
         /// Overridden for debugging purposes.
@@ -49,9 +54,14 @@ namespace Interpreter.Parser.AST
         public override string ToString()
         {
             string output = base.ToString();
-            if (Expression != null)
+            if (Condition != null)
             {
-                output += "\nExpression = " + Expression.ToString();
+                output += "\nCondition = " + base.ToString();
+            }
+
+            if (Body != null)
+            {
+                output += "\nBody = " + Body.ToString();
             }
 
             return output;

@@ -1,5 +1,5 @@
 ﻿/**
- * Class for the call expression node.
+ * Class for the if statement node.
  * 
  * Copyright (c) 2021 Syeerus
  *
@@ -25,14 +25,19 @@
 namespace Interpreter.Parser.AST
 {
     /// <summary>
-    /// Call expression for an AST.
+    /// If statement node for an AST.
     /// </summary>
-    public class CallExpressionNode : Node
+    public class IfStatementNode : Node
     {
         /// <summary>
-        /// Name of the procedure to call.
+        /// The condition to evaluate.
         /// </summary>
-        public string Name;
+        public ConditionNode Condition;
+
+        /// <summary>
+        /// The body to execute.
+        /// </summary>
+        public Node Body;
 
         /// <summary>
         /// Constructor.
@@ -40,6 +45,26 @@ namespace Interpreter.Parser.AST
         /// <param name="offset">Starting offset of the source string.</param>
         /// <param name="line">Starting line of the source string.</param>
         /// <param name="column">Starting column of the source string.</param>
-        public CallExpressionNode(int offset, int line, int column) : base(offset, line, column) { }
+        public IfStatementNode(int offset, int line, int column) : base(offset, line, column) { }
+
+        /// <summary>
+        /// Overridden for debugging purposes.
+        /// </summary>
+        /// <returns>The node converted to a string.</returns>
+        public override string ToString()
+        {
+            string output = base.ToString();
+            if (Condition != null)
+            {
+                output += "\nCondition = " + Condition.ToString();
+            }
+
+            if (Body != null)
+            {
+                output += "\nBody = " + Body.ToString();
+            }
+
+            return output;
+        }
     }
 }

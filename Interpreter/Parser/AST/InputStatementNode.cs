@@ -42,5 +42,10 @@ namespace Interpreter.Parser.AST
         /// <param name="column">Starting column of the source string.</param>
         /// <param name="identifier">The name of the identifier.</param>
         public InputStatementNode(int offset, int line, int column) : base(offset, line, column) { }
+
+        public override string ToString()
+        {
+            return base.ToString() + "\nIdentifier = " + Identifier.ToString();
+        }
     }
 }

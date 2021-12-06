@@ -25,19 +25,43 @@
 namespace Interpreter.Parser.AST
 {
     /// <summary>
+    /// Conditional operators.
+    /// </summary>
+    public enum ConditionalOperator
+    {
+        Invalid,
+        Equals = TokenType.Equals,
+        NotEquals = TokenType.Hash,
+        LessThan = TokenType.LessThan,
+        GreaterThan = TokenType.GreaterThan,
+        LessThanEquals = TokenType.LessThanEquals,
+        GreaterThanEquals = TokenType.GreaterThanEquals
+    }
+
+    /// <summary>
     /// Condition node for an AST.
     /// </summary>
     public class ConditionNode : Node
     {
         /// <summary>
-        /// Expression to evaluate.
+        /// Left hand side expression.
         /// </summary>
-        public Node Expression;
+        public Node Left;
 
         /// <summary>
-        /// The body of the condition that is executed when the expression evaluates to true.
+        /// Operator to use.
         /// </summary>
-        public Node Body;
+        public ConditionalOperator Operator;
+
+        /// <summary>
+        /// Right hand side expression.
+        /// </summary>
+        public Node Right;
+
+        /// <summary>
+        /// If the condition should check for an odd number.
+        /// </summary>
+        public bool HasOdd;
 
         /// <summary>
         /// Constructor.
@@ -45,6 +69,24 @@ namespace Interpreter.Parser.AST
         /// <param name="offset">Starting offset of the source string.</param>
         /// <param name="line">Starting line of the source string.</param>
         /// <param name="column">Starting column of the source string.</param>
-        public ConditionNode(int offset, int line, int column) : base(offset, line, column) { }
+        public ConditionNode(int offset, int line, int column) : base(offset, line, column)
+        {
+            HasOdd = false;
+        }
+
+        /// <summary>
+        /// Overridden for debugging purposes.
+        /// </summary>
+        /// <returns>The node converted to a string.</returns>
+        public override string ToString()
+        {
+            string output = $"[{GetType().Name}, off: {Offset}, line: {Line}, col: {Column}, odd: {HasOdd}, op: {Operator}]";
+            if (Left != null)
+            {
+                output += "\nLeft = " + Left.ToString();
+            }
+
+            return output;
+        }
     }
 }
