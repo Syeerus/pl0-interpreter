@@ -233,6 +233,12 @@ namespace Interpreter.Parser
                 var unary = new UnaryExpressionNode(t.Offset, t.Line, t.Column);
                 unary.Operator = (UnaryOperator)t.Type;
                 Advance();
+                if (IsUnaryOperator(_currentToken))
+                {
+                    unary.Expression = ParseExpression();
+                    return unary;
+                }
+
                 unary.Expression = ParseTerm();
                 left = unary;
             }

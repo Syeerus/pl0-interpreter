@@ -106,5 +106,14 @@ namespace Tests
                 Console.WriteLine();
             }
         }
+
+        [TestMethod]
+        public void MultipleUnaryExpression()
+        {
+            var parser = new Parser("var x; x := ---1-2 .");
+            Console.WriteLine("Parsing \"" + parser.Source + "\"");
+            ProgramNode program = parser.Parse();
+            Console.WriteLine(program);
+        }
     }
 }
