@@ -143,6 +143,18 @@ namespace Tests
         }
 
         [TestMethod]
+        public void StringTest()
+        {
+            var scanner = new Scanner("'Hello world'.");
+            Token[] expected =
+            {
+                new Token(TokenType.StringLiteral, 0, 1, 1, "Hello world"),
+                new Token(TokenType.Dot, 13, 1, 14)
+            };
+            TokensAreEqual(scanner, expected);
+        }
+
+        [TestMethod]
         public void StringNewlineTest()
         {
             var scanner = new Scanner("'Hello\nWorld.'");
