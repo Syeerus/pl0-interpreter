@@ -37,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Parser\AST\AssignmentStatementNode.cs" />
+    <Compile Include="Parser\AST\BeginStatementNode.cs" />
     <Compile Include="Parser\AST\BinaryExpressionNode.cs" />
     <Compile Include="Parser\AST\BlockStatementNode.cs" />
     <Compile Include="Parser\AST\CallStatementNode.cs" />
