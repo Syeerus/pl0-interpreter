@@ -1,5 +1,5 @@
 ﻿/**
- * Class for the call expression node.
+ * Class for the call statement node.
  * 
  * Copyright (c) 2021 Syeerus
  *
@@ -25,7 +25,7 @@
 namespace Interpreter.Parser.AST
 {
     /// <summary>
-    /// Call expression for an AST.
+    /// Call statement for an AST.
     /// </summary>
     public class CallStatementNode : Node
     {
