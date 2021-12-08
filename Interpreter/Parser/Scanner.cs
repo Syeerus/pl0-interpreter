@@ -139,7 +139,7 @@ namespace Interpreter.Parser
         /// </summary>
         private void SkipWhiteSpace()
         {
-            bool isLooping = true;
+            var isLooping = true;
             while (isLooping)
             {
                 char c = Read();
@@ -169,7 +169,7 @@ namespace Interpreter.Parser
         /// <returns>Identifier or keyword token.</returns>
         private Token GetIdentifierOrKeyword()
         {
-            int n = 1;        // How many characters to advance.
+            var n = 1;        // How many characters to advance.
             char c = Read(n);
             while (IsLetter(c) || IsDigit(c) || c == '_')
             {
@@ -297,7 +297,7 @@ namespace Interpreter.Parser
         /// <returns>A hexadecimal number string.</returns>
         private string GetHexadecimalStr()
         {
-            int n = 2;     // Offset position.
+            var n = 2;     // Offset position.
             char c = Read(n);
             while (IsHexadecimal(c))
             {
@@ -315,7 +315,7 @@ namespace Interpreter.Parser
         /// <returns>A binary number string.</returns>
         private string GetBinaryStr()
         {
-            int n = 2;      // Offset position.
+            var n = 2;      // Offset position.
             char c = Read(n);
             while (IsBinary(c))
             {
@@ -333,7 +333,7 @@ namespace Interpreter.Parser
         /// <returns>An octal number string.</returns>
         private string GetOctalStr()
         {
-            int n = 1;      // Offset position.
+            var n = 1;      // Offset position.
             char c = Read(n);
             while (IsOctal(c))
             {
@@ -350,8 +350,8 @@ namespace Interpreter.Parser
         /// <returns>An integer or float token.</returns>
         private Token GetIntegerOrFloat()
         {
-            int n = 1;      // Offset position.
-            TokenType type = TokenType.IntegerLiteral;
+            var n = 1;      // Offset position.
+            var type = TokenType.IntegerLiteral;
             while (!IsAtEnd(n))
             {
                 char c = Read(n);
@@ -387,7 +387,7 @@ namespace Interpreter.Parser
         /// <returns>An operator token, or invalid token if there's no match.</returns>
         private Token GetOperator()
         {
-            int n = 1;    // How many characters to advance.
+            var n = 1;    // How many characters to advance.
             Token token = null;
             char c = Read();
             switch (c)
@@ -471,8 +471,8 @@ namespace Interpreter.Parser
             int startLine = _line;
             int startColumn = _column;
             char startChar = Read();
-            int n = 1;      // How many characters to advance.
-            bool isEscaping = false;
+            var n = 1;      // How many characters to advance.
+            var isEscaping = false;
             while (!IsAtEnd(n))
             {
                 char c = Read(n);

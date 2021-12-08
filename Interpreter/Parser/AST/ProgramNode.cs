@@ -53,7 +53,7 @@ namespace Interpreter.Parser.AST
                 return base.ToString();
             }
 
-            return base.ToString() + "\n" + Body.ToString();
+            return $"{base.ToString()}\n{Body.ToString()}";
         }
     }
 }

@@ -56,7 +56,7 @@ namespace Interpreter.Parser.AST
             string output = $"[{GetType().Name}, off: {Offset}, line: {Line}, col: {Column}, type: {CastType}]";
             if (Expression != null)
             {
-                output += "\nExpression = " + Expression.ToString();
+                output += $"\nExpression = {Expression.ToString()}";
             }
 
             return output;

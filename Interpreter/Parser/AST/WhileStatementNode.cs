@@ -56,12 +56,12 @@ namespace Interpreter.Parser.AST
             string output = base.ToString();
             if (Condition != null)
             {
-                output += "\nCondition = " + Condition.ToString();
+                output += $"\nCondition = {Condition.ToString()}";
             }
 
             if (Body != null)
             {
-                output += "\nBody = " + Body.ToString();
+                output += $"\nBody = {Body.ToString()}";
             }
 
             return output;

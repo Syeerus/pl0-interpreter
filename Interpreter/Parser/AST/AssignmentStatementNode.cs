@@ -57,12 +57,12 @@ namespace Interpreter.Parser.AST
             string output = base.ToString();
             if (Identifier != null)
             {
-                output += "\nIdentifier = " + Identifier.ToString();
+                output += $"\nIdentifier = {Identifier.ToString()}";
             }
 
             if (Value != null)
             {
-                output += "\nValue = " + Value.ToString();
+                output += $"\nValue = {Value.ToString()}";
             }
 
             return output;

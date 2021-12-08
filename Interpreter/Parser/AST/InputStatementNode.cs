@@ -45,7 +45,7 @@ namespace Interpreter.Parser.AST
 
         public override string ToString()
         {
-            return base.ToString() + "\nIdentifier = " + Identifier.ToString();
+            return $"{base.ToString()}\nIdentifier = {Identifier.ToString()}";
         }
     }
 }

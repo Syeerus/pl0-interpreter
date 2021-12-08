@@ -56,7 +56,7 @@ namespace Interpreter.Parser.AST
             string output = $"[{GetType().Name}, off: {Offset}, line: {Line}, col: {Column}, name: \"{Name}\"]";
             if (Body != null)
             {
-                output += "\nBody = " + Body.ToString();
+                output += $"\nBody = {Body.ToString()}";
             }
 
             return output;

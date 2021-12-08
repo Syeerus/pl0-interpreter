@@ -83,12 +83,12 @@ namespace Interpreter.Parser.AST
             string output = $"[{GetType().Name}, off: {Offset}, line: {Line}, col: {Column}, odd: {HasOdd}, op: {Operator}]";
             if (Left != null)
             {
-                output += "\nLeft = " + Left.ToString();
+                output += $"\nLeft = {Left.ToString()}";
             }
 
             if (Right != null)
             {
-                output += "\nRight = " + Right.ToString();
+                output += $"\nRight = {Right.ToString()}";
             }
 
             return output;

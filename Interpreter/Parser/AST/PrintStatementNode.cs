@@ -51,7 +51,7 @@ namespace Interpreter.Parser.AST
             string output = base.ToString();
             if (Expression != null)
             {
-                output += "\nExpression = " + Expression.ToString();
+                output += $"\nExpression = {Expression.ToString()}";
             }
 
             return output;

@@ -53,7 +53,7 @@ namespace Interpreter.Parser.AST
                 return base.ToString();
             }
 
-            return base.ToString() + "\nCaller = " + Identifier.ToString();
+            return $"{base.ToString()}\nCaller = {Identifier.ToString()}";
         }
     }
 }

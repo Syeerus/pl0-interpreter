@@ -23,6 +23,7 @@
  */
 
 using System.Collections.Generic;
+using System.Text;
 
 namespace Interpreter.Parser.AST
 {
@@ -50,13 +51,13 @@ namespace Interpreter.Parser.AST
         /// <returns>The node converted to a string.</returns>
         public override string ToString()
         {
-            string output = base.ToString();
+            var output = new StringBuilder(base.ToString());
             foreach (VariableDeclarationNode node in Declarations)
             {
-                output += "\n- " + node.ToString();
+                output.Append($"\n- {node.ToString()}");
             }
 
-            return output;
+            return output.ToString();
         }
     }
 }

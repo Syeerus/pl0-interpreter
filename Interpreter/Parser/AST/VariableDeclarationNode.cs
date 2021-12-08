@@ -63,7 +63,7 @@ namespace Interpreter.Parser.AST
         public override string ToString()
         {
             string constStr = (IsConstant ? "CONST" : "");
-            return base.ToString() + $" {constStr} {Name} = {Value}";
+            return $"{base.ToString()} {constStr} {Name} = {Value}";
         }
     }
 }
