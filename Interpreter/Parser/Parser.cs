@@ -110,6 +110,121 @@ namespace Interpreter.Parser
         }
 
         /// <summary>
+        /// Checks if a token is an unary operator.
+        /// </summary>
+        /// <param name="token">Token to check.</param>
+        /// <returns>If the token is an unary operator.</returns>
+        private static bool IsUnaryOperator(Token token)
+        {
+            switch (token.Type)
+            {
+                case TokenType.Plus:
+                case TokenType.Minus:
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if a token is a binary operator.
+        /// </summary>
+        /// <param name="token">Token to check.</param>
+        /// <returns>If the token is a binary operator.</returns>
+        private static bool IsBinaryOperator(Token token)
+        {
+            switch (token.Type)
+            {
+                case TokenType.Plus:
+                case TokenType.Minus:
+                case TokenType.Star:
+                case TokenType.Slash:
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if a token is a conditional operator.
+        /// </summary>
+        /// <param name="token">Token to check.</param>
+        /// <returns>If the token is a conditional operator.</returns>
+        private static bool IsConditionalOperator(Token token)
+        {
+            switch (token.Type)
+            {
+                case TokenType.Equals:
+                case TokenType.Hash:
+                case TokenType.LessThan:
+                case TokenType.GreaterThan:
+                case TokenType.LessThanEquals:
+                case TokenType.GreaterThanEquals:
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if a token is a literal.
+        /// </summary>
+        /// <param name="token">Token to check.</param>
+        /// <returns>If the token is a literal.</returns>
+        private static bool IsLiteral(Token token)
+        {
+            switch (token.Type)
+            {
+                case TokenType.IntegerLiteral:
+                case TokenType.FloatLiteral:
+                case TokenType.StringLiteral:
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Gets the data type by keyword token.
+        /// </summary>
+        /// <param name="token">Token to check.</param>
+        /// <returns>A corresponding data type.</returns>
+        private static DataType GetDataType(Token token)
+        {
+            switch (token.Type)
+            {
+                case TokenType.Int:
+                    return DataType.Integer;
+                case TokenType.Float:
+                    return DataType.Float;
+                case TokenType.String:
+                    return DataType.String;
+            }
+
+            return DataType.Invalid;
+        }
+
+        /// <summary>
+        /// Gets the data type of a literal token.
+        /// </summary>
+        /// <param name="token">Token to check.</param>
+        /// <returns>A corresponding data type.</returns>
+        private static DataType GetLiteralDataType(Token token)
+        {
+            switch (token.Type)
+            {
+                case TokenType.IntegerLiteral:
+                    return DataType.Integer;
+                case TokenType.FloatLiteral:
+                    return DataType.Float;
+                case TokenType.StringLiteral:
+                    return DataType.String;
+            }
+
+            return DataType.Invalid;
+        }
+
+        /// <summary>
         /// Parses a statement.
         /// </summary>
         /// <returns>An AST node of a statement, or null if at the end or is an empty statement.</returns>
@@ -487,121 +602,6 @@ namespace Interpreter.Parser
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Checks if a token is an unary operator.
-        /// </summary>
-        /// <param name="token">Token to check.</param>
-        /// <returns>If the token is an unary operator.</returns>
-        private bool IsUnaryOperator(Token token)
-        {
-            switch (token.Type)
-            {
-                case TokenType.Plus:
-                case TokenType.Minus:
-                    return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Checks if a token is a binary operator.
-        /// </summary>
-        /// <param name="token">Token to check.</param>
-        /// <returns>If the token is a binary operator.</returns>
-        private bool IsBinaryOperator(Token token)
-        {
-            switch (token.Type)
-            {
-                case TokenType.Plus:
-                case TokenType.Minus:
-                case TokenType.Star:
-                case TokenType.Slash:
-                    return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Checks if a token is a conditional operator.
-        /// </summary>
-        /// <param name="token">Token to check.</param>
-        /// <returns>If the token is a conditional operator.</returns>
-        private bool IsConditionalOperator(Token token)
-        {
-            switch (token.Type)
-            {
-                case TokenType.Equals:
-                case TokenType.Hash:
-                case TokenType.LessThan:
-                case TokenType.GreaterThan:
-                case TokenType.LessThanEquals:
-                case TokenType.GreaterThanEquals:
-                    return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Checks if a token is a literal.
-        /// </summary>
-        /// <param name="token">Token to check.</param>
-        /// <returns>If the token is a literal.</returns>
-        private bool IsLiteral(Token token)
-        {
-            switch (token.Type)
-            {
-                case TokenType.IntegerLiteral:
-                case TokenType.FloatLiteral:
-                case TokenType.StringLiteral:
-                    return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the data type by keyword token.
-        /// </summary>
-        /// <param name="token">Token to check.</param>
-        /// <returns>A corresponding data type.</returns>
-        private static DataType GetDataType(Token token)
-        {
-            switch (token.Type)
-            {
-                case TokenType.Int:
-                    return DataType.Integer;
-                case TokenType.Float:
-                    return DataType.Float;
-                case TokenType.String:
-                    return DataType.String;
-            }
-
-            return DataType.Invalid;
-        }
-
-        /// <summary>
-        /// Gets the data type of a literal token.
-        /// </summary>
-        /// <param name="token">Token to check.</param>
-        /// <returns>A corresponding data type.</returns>
-        private DataType GetLiteralDataType(Token token)
-        {
-            switch (token.Type)
-            {
-                case TokenType.IntegerLiteral:
-                    return DataType.Integer;
-                case TokenType.FloatLiteral:
-                    return DataType.Float;
-                case TokenType.StringLiteral:
-                    return DataType.String;
-            }
-
-            return DataType.Invalid;
         }
 
         /// <summary>
