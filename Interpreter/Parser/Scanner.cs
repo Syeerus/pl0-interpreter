@@ -108,6 +108,129 @@ namespace Interpreter.Parser
         }
 
         /// <summary>
+        /// Checks if a given character is a decimal digit.
+        /// </summary>
+        /// <param name="c">Character to test.</param>
+        /// <returns>If the given character is a decimal digit.</returns>
+        private static bool IsDigit(char c)
+        {
+            return (c >= '0' && c <= '9');
+        }
+
+        /// <summary>
+        /// Checks if a given character is a letter of the Latin alphabet.
+        /// </summary>
+        /// <param name="c">Character to test.</param>
+        /// <returns>If the given character is a letter of the Latin alphabet.</returns>
+        private static bool IsLetter(char c)
+        {
+            return ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'));
+        }
+
+        /// <summary>
+        /// Checks if a given character is a hexadecimal digit.
+        /// </summary>
+        /// <param name="c">Character to test.</param>
+        /// <returns>If the given character is a hexadecimal digit.</returns>
+        private static bool IsHexadecimal(char c)
+        {
+            char upper = char.ToUpper(c);
+            return (char.IsDigit(upper) || (upper >= 'A' && upper <= 'F'));
+        }
+
+        /// <summary>
+        /// Checks if a given character is a binary digit.
+        /// </summary>
+        /// <param name="c">Character to test.</param>
+        /// <returns>If the given character is a binary digit.</returns>
+        private static bool IsBinary(char c)
+        {
+            return (c == '0' || c == '1');
+        }
+
+        /// <summary>
+        /// Checks if a given character is an octal digit.
+        /// </summary>
+        /// <param name="c">Character to test.</param>
+        /// <returns>If the given character is an octal digit.</returns>
+        private static bool IsOctal(char c)
+        {
+            return (c >= '0' && c <= '7');
+        }
+
+        /// <summary>
+        /// Checks if a given character is the start of a string.
+        /// </summary>
+        /// <param name="c">Character to test.</param>
+        /// <returns>If the given character is the start of a string.</returns>
+        private static bool IsString(char c)
+        {
+            return (c == '"' || c == '\'');
+        }
+
+        /// <summary>
+        /// Checks if a given character is another type of token.
+        /// </summary>
+        /// <param name="c">Character to check.</param>
+        /// <returns>If the given character is another type of token.</returns>
+        private static bool IsOther(char c)
+        {
+            switch (c)
+            {
+                case '.':
+                case ',':
+                case ';':
+                case '?':
+                case '!':
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Gets the corresponding token type of a keyword.
+        /// </summary>
+        /// <param name="keyword">Keyword to check.</param>
+        /// <returns>The corresponding token type of a keyword, or invalid if no match is found.</returns>
+        private static TokenType GetKeywordType(string keyword)
+        {
+            switch (keyword.ToLower())
+            {
+                case "const":
+                    return TokenType.Const;
+                case "var":
+                    return TokenType.Var;
+                case "procedure":
+                    return TokenType.Procedure;
+                case "call":
+                    return TokenType.Call;
+                case "begin":
+                    return TokenType.Begin;
+                case "end":
+                    return TokenType.End;
+                case "if":
+                    return TokenType.If;
+                case "then":
+                    return TokenType.Then;
+                case "odd":
+                    return TokenType.Odd;
+                case "while":
+                    return TokenType.While;
+                case "do":
+                    return TokenType.Do;
+                case "int":
+                    return TokenType.Int;
+                case "float":
+                    return TokenType.Float;
+                case "string":
+                    return TokenType.String;
+            }
+
+            return TokenType.Invalid;
+        }
+
+        /// <summary>
         /// Advances the character offset position.
         /// </summary>
         /// <param name="n">Number of characters to move.</param>
@@ -191,48 +314,6 @@ namespace Interpreter.Parser
 
             Advance(n);
             return token;
-        }
-
-        /// <summary>
-        /// Gets the corresponding token type of a keyword.
-        /// </summary>
-        /// <param name="keyword">Keyword to check.</param>
-        /// <returns>The corresponding token type of a keyword, or invalid if no match is found.</returns>
-        private TokenType GetKeywordType(string keyword)
-        {
-            switch (keyword.ToLower())
-            {
-                case "const":
-                    return TokenType.Const;
-                case "var":
-                    return TokenType.Var;
-                case "procedure":
-                    return TokenType.Procedure;
-                case "call":
-                    return TokenType.Call;
-                case "begin":
-                    return TokenType.Begin;
-                case "end":
-                    return TokenType.End;
-                case "if":
-                    return TokenType.If;
-                case "then":
-                    return TokenType.Then;
-                case "odd":
-                    return TokenType.Odd;
-                case "while":
-                    return TokenType.While;
-                case "do":
-                    return TokenType.Do;
-                case "int":
-                    return TokenType.Int;
-                case "float":
-                    return TokenType.Float;
-                case "string":
-                    return TokenType.String;
-            }
-
-            return TokenType.Invalid;
         }
 
         /// <summary>
@@ -566,57 +647,6 @@ namespace Interpreter.Parser
         }
 
         /// <summary>
-        /// Checks if a given character is a decimal digit.
-        /// </summary>
-        /// <param name="c">Character to test.</param>
-        /// <returns>If the given character is a decimal digit.</returns>
-        private bool IsDigit(char c)
-        {
-            return (c >= '0' && c <= '9');
-        }
-
-        /// <summary>
-        /// Checks if a given character is a letter of the Latin alphabet.
-        /// </summary>
-        /// <param name="c">Character to test.</param>
-        /// <returns>If the given character is a letter of the Latin alphabet.</returns>
-        private bool IsLetter(char c)
-        {
-            return ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'));
-        }
-
-        /// <summary>
-        /// Checks if a given character is a hexadecimal digit.
-        /// </summary>
-        /// <param name="c">Character to test.</param>
-        /// <returns>If the given character is a hexadecimal digit.</returns>
-        private bool IsHexadecimal(char c)
-        {
-            char upper = char.ToUpper(c);
-            return (char.IsDigit(upper) || (upper >= 'A' && upper <= 'F'));
-        }
-
-        /// <summary>
-        /// Checks if a given character is a binary digit.
-        /// </summary>
-        /// <param name="c">Character to test.</param>
-        /// <returns>If the given character is a binary digit.</returns>
-        private bool IsBinary(char c)
-        {
-            return (c == '0' || c == '1');
-        }
-
-        /// <summary>
-        /// Checks if a given character is an octal digit.
-        /// </summary>
-        /// <param name="c">Character to test.</param>
-        /// <returns>If the given character is an octal digit.</returns>
-        private bool IsOctal(char c)
-        {
-            return (c >= '0' && c <= '7');
-        }
-
-        /// <summary>
         /// Checks if a given character is an operator.
         /// NOTE: Will check for certain multi-character operators as well, such as ":=".
         /// </summary>
@@ -643,36 +673,6 @@ namespace Interpreter.Parser
                         return true;
                     }
                     break;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Checks if a given character is the start of a string.
-        /// </summary>
-        /// <param name="c">Character to test.</param>
-        /// <returns>If the given character is the start of a string.</returns>
-        private bool IsString(char c)
-        {
-            return (c == '"' || c == '\'');
-        }
-
-        /// <summary>
-        /// Checks if a given character is another type of token.
-        /// </summary>
-        /// <param name="c">Character to check.</param>
-        /// <returns>If the given character is another type of token.</returns>
-        private bool IsOther(char c)
-        {
-            switch (c)
-            {
-                case '.':
-                case ',':
-                case ';':
-                case '?':
-                case '!':
-                    return true;
             }
 
             return false;
