@@ -86,6 +86,11 @@ namespace Interpreter.Parser.AST
                 output += "\nLeft = " + Left.ToString();
             }
 
+            if (Right != null)
+            {
+                output += "\nRight = " + Right.ToString();
+            }
+
             return output;
         }
     }
