@@ -334,6 +334,18 @@ namespace Interpreter.Parser
             else if (t.Type == TokenType.LeftParenthesis)
             {
                 Advance();
+                DataType type = GetDataType(_currentToken);
+                if (type != DataType.Invalid)
+                {
+                    var cast = new TypecastNode(t.Offset, t.Line, t.Column);
+                    Advance();
+                    AssertMatches(TokenType.RightParenthesis);
+                    Advance();
+                    cast.CastType = type;
+                    cast.Expression = ParseFactor();
+                    return cast;
+                }
+
                 Node node = ParseExpression();
                 AssertMatches(TokenType.RightParenthesis);
                 Advance();
@@ -550,6 +562,26 @@ namespace Interpreter.Parser
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Gets the data type by keyword token.
+        /// </summary>
+        /// <param name="token">Token to check.</param>
+        /// <returns>A corresponding data type.</returns>
+        private static DataType GetDataType(Token token)
+        {
+            switch (token.Type)
+            {
+                case TokenType.Int:
+                    return DataType.Integer;
+                case TokenType.Float:
+                    return DataType.Float;
+                case TokenType.String:
+                    return DataType.String;
+            }
+
+            return DataType.Invalid;
         }
 
         /// <summary>

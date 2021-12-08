@@ -54,6 +54,7 @@ namespace Interpreter.Parser
         IntegerLiteral,
         FloatLiteral,
         StringLiteral,
+        EndOfSource,
         // Keywords
         Const,
         Var,
@@ -66,7 +67,9 @@ namespace Interpreter.Parser
         Odd,
         While,
         Do,
-        EndOfSource
+        Int,
+        Float,
+        String
     }
 
     /// <summary>

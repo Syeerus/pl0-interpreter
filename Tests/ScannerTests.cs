@@ -274,7 +274,7 @@ namespace Tests
         [TestMethod]
         public void KeywordTest()
         {
-            var scanner = new Scanner("const var procedure call begin end if then odd while do");
+            var scanner = new Scanner("const var procedure call begin end if then odd while do int float string");
             Token[] expected =
             {
                 new Token(TokenType.Const, 0, 1, 1),
@@ -287,7 +287,10 @@ namespace Tests
                 new Token(TokenType.Then, 38, 1, 39),
                 new Token(TokenType.Odd, 43, 1, 44),
                 new Token(TokenType.While, 47, 1, 48),
-                new Token(TokenType.Do, 53, 1, 54)
+                new Token(TokenType.Do, 53, 1, 54),
+                new Token(TokenType.Int, 56, 1, 57),
+                new Token(TokenType.Float, 60, 1, 61),
+                new Token(TokenType.String, 66, 1, 67)
             };
             TokensAreEqual(scanner, expected);
 

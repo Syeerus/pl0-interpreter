@@ -142,5 +142,14 @@ namespace Tests
             ProgramNode program = parser.Parse();
             Console.WriteLine(program);
         }
+
+        [TestMethod]
+        public void TypecastTest()
+        {
+            var parser = new Parser("var x; x := (int)('5' + '2') - (int)2.1 .");
+            Console.WriteLine("Parsing \"" + parser.Source + "\"");
+            ProgramNode program = parser.Parse();
+            Console.WriteLine(program);
+        }
     }
 }

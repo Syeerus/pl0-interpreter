@@ -50,6 +50,7 @@
     <Compile Include="Parser\AST\ConditionNode.cs" />
     <Compile Include="Parser\AST\IdentifierNode.cs" />
     <Compile Include="Parser\AST\ProgramNode.cs" />
+    <Compile Include="Parser\AST\TypecastNode.cs" />
     <Compile Include="Parser\AST\UnaryExpressionNode.cs" />
     <Compile Include="Parser\AST\VariableDeclarationNode.cs" />
     <Compile Include="Parser\AST\VariableDeclarationsNode.cs" />

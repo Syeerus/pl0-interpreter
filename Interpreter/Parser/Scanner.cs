@@ -224,6 +224,12 @@ namespace Interpreter.Parser
                     return TokenType.While;
                 case "do":
                     return TokenType.Do;
+                case "int":
+                    return TokenType.Int;
+                case "float":
+                    return TokenType.Float;
+                case "string":
+                    return TokenType.String;
             }
 
             return TokenType.Invalid;
