@@ -51,13 +51,13 @@ namespace Interpreter.Parser.AST
         /// <returns>The node converted to a string.</returns>
         public override string ToString()
         {
-            var builder = new StringBuilder(base.ToString());
+            var output = new StringBuilder(base.ToString());
             foreach (Node n in Body)
             {
-                builder.Append("\n > " + n.ToString());
+                output.Append("\n > " + n.ToString());
             }
 
-            return builder.ToString();
+            return output.ToString();
         }
     }
 }
