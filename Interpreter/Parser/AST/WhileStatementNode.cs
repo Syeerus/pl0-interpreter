@@ -56,7 +56,7 @@ namespace Interpreter.Parser.AST
             string output = base.ToString();
             if (Condition != null)
             {
-                output += "\nCondition = " + base.ToString();
+                output += "\nCondition = " + Condition.ToString();
             }
 
             if (Body != null)
