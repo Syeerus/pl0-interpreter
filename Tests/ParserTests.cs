@@ -115,5 +115,32 @@ namespace Tests
             ProgramNode program = parser.Parse();
             Console.WriteLine(program);
         }
+
+        [TestMethod]
+        public void WhileTest()
+        {
+            var parser = new Parser("while 1 = 1 do ! 'Hello world'.");
+            Console.WriteLine("Parsing \"" + parser.Source + "\"");
+            ProgramNode program = parser.Parse();
+            Console.WriteLine(program);
+        }
+
+        [TestMethod]
+        public void BeginEndTest()
+        {
+            var parser = new Parser("begin ! 1; ! 2 end.");
+            Console.WriteLine("Parsing \"" + parser.Source + "\"");
+            ProgramNode program = parser.Parse();
+            Console.WriteLine(program);
+        }
+
+        [TestMethod]
+        public void IfThenTest()
+        {
+            var parser = new Parser("if 1 # 1 then ! 1 .");
+            Console.WriteLine("Parsing \"" + parser.Source + "\"");
+            ProgramNode program = parser.Parse();
+            Console.WriteLine(program);
+        }
     }
 }

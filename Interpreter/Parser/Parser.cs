@@ -131,44 +131,63 @@ namespace Interpreter.Parser
             Token t = _currentToken;
             if (Matches(TokenType.Identifier))
             {
-                var assignment = new AssignmentStatementNode(t.Offset, t.Line, t.Column);
-                assignment.Identifier = new IdentifierNode(t.Offset, t.Line, t.Column);
-                assignment.Identifier.Name = t.Value;
+                var stmt = new AssignmentStatementNode(t.Offset, t.Line, t.Column);
+                stmt.Identifier = new IdentifierNode(t.Offset, t.Line, t.Column);
+                stmt.Identifier.Name = t.Value;
                 Advance();
                 AssertMatches(TokenType.ColonEquals);
                 Advance();
-                assignment.Value = ParseExpression();
-                return assignment;
+                stmt.Value = ParseExpression();
+                return stmt;
             }
             else if (Matches(TokenType.Call))
             {
-                var call = new CallStatementNode(t.Offset, t.Line, t.Column);
+                var stmt = new CallStatementNode(t.Offset, t.Line, t.Column);
                 t = Advance();
                 AssertMatches(TokenType.Identifier);
-                call.Identifier = new IdentifierNode(t.Offset, t.Line, t.Column);
-                call.Identifier.Name = t.Value;
+                stmt.Identifier = new IdentifierNode(t.Offset, t.Line, t.Column);
+                stmt.Identifier.Name = t.Value;
                 Advance();
-                return call;
+                return stmt;
             }
             else if (Matches(TokenType.QuestionMark))
             {
-                var input = new InputStatementNode(t.Offset, t.Line, t.Column);
+                var stmt = new InputStatementNode(t.Offset, t.Line, t.Column);
                 t = Advance();
                 AssertMatches(TokenType.Identifier);
-                input.Identifier = new IdentifierNode(t.Offset, t.Line, t.Column);
-                input.Identifier.Name = t.Value;
+                stmt.Identifier = new IdentifierNode(t.Offset, t.Line, t.Column);
+                stmt.Identifier.Name = t.Value;
                 Advance();
-                return input;
+                return stmt;
             }
             else if (Matches(TokenType.ExclamationMark))
             {
+                var stmt = new PrintStatementNode(t.Offset, t.Line, t.Column);
                 Advance();
-                // TODO
+                stmt.Expression = ParseExpression();
+                return stmt;
             }
             else if (Matches(TokenType.Begin))
             {
-                Advance();
-                // TODO
+                var stmt = new BeginStatementNode(t.Offset, t.Line, t.Column);
+                do
+                {
+                    Advance();
+                    Node n = ParseStatement();
+                    if (n != null)
+                    {
+                        // Don't add blank statements.
+                        stmt.Body.Add(n);
+                    }
+
+                    if (Matches(TokenType.End))
+                    {
+                        Advance();
+                        break;
+                    }
+                } while (Matches(TokenType.Semicolon));
+
+                return stmt;
             }
             else if (Matches(TokenType.If))
             {
@@ -182,8 +201,13 @@ namespace Interpreter.Parser
             }
             else if (Matches(TokenType.While))
             {
+                var stmt = new WhileStatementNode(t.Offset, t.Line, t.Column);
                 Advance();
-                // TODO
+                stmt.Condition = ParseCondition();
+                AssertMatches(TokenType.Do);
+                Advance();
+                stmt.Body = ParseStatement();
+                return stmt;
             }
 
             throw new SyntaxError(t.Line, t.Column, $"Unrecognized statement: {t.Type}");
@@ -316,7 +340,7 @@ namespace Interpreter.Parser
                 return node;
             }
 
-            throw new SyntaxError(t.Line, t.Column, "Expected identifier, literal, or expression.");
+            throw new SyntaxError(t.Line, t.Column, $"Expected identifier, literal, or expression, but got {t.Type}.");
         }
 
         /// <summary>
