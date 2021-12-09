@@ -54,7 +54,7 @@ namespace Interpreter.Parser.AST
             var output = new StringBuilder(base.ToString());
             foreach (Node n in Body)
             {
-                output.Append("\n > " + n.ToString());
+                output.Append($"\n > {n.ToString()}");
             }
 
             return output.ToString();
