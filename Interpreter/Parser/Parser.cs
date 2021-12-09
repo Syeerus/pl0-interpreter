@@ -332,6 +332,8 @@ namespace Interpreter.Parser
         /// Parses a condition.
         /// </summary>
         /// <returns>An AST condition node.</returns>
+        /// <exception cref="SyntaxError">Thrown on a syntax error.</exception>
+        /// <exception cref="UnterminatedStringError">Thrown if an unterminated string is encountered.</exception>
         private ConditionNode ParseCondition()
         {
             Token t = _currentToken;
@@ -363,6 +365,8 @@ namespace Interpreter.Parser
         /// Parses an expression.
         /// </summary>
         /// <returns>An AST expression node.</returns>
+        /// <exception cref="SyntaxError">Thrown on a syntax error.</exception>
+        /// <exception cref="UnterminatedStringError">Thrown if an unterminated string is encountered.</exception>
         private Node ParseExpression()
         {
             Node left = null;
@@ -408,6 +412,8 @@ namespace Interpreter.Parser
         /// Parses a term of the grammar.
         /// </summary>
         /// <returns>A node representing a term.</returns>
+        /// <exception cref="SyntaxError">Thrown on a syntax error.</exception>
+        /// <exception cref="UnterminatedStringError">Thrown if an unterminated string is encountered.</exception>
         private Node ParseTerm()
         {
             Token t = _currentToken;
@@ -430,6 +436,8 @@ namespace Interpreter.Parser
         /// Parses a factor of the grammar.
         /// </summary>
         /// <returns>A node representing a factor.</returns>
+        /// <exception cref="SyntaxError">Thrown on a syntax error.</exception>
+        /// <exception cref="UnterminatedStringError">Thrown if an unterminated string is encountered.</exception>
         private Node ParseFactor()
         {
             Token t = _currentToken;
