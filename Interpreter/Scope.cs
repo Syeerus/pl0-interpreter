@@ -34,11 +34,6 @@ namespace Interpreter
     public class Scope
     {
         /// <summary>
-        /// Child scope.
-        /// </summary>
-        public Scope Child;
-
-        /// <summary>
         /// Stored variables.
         /// </summary>
         private readonly Dictionary<string, Variable> _variables = new Dictionary<string, Variable>();
