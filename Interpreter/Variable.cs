@@ -1,5 +1,5 @@
 ﻿/**
- * Variable representation within environments.
+ * Variable representation within scopes.
  * 
  * Copyright (c) 2021 Syeerus
  *
@@ -29,35 +29,19 @@ namespace Interpreter
 {
     /// <summary>
     /// A variable.
-    /// Doesn't 
     /// </summary>
-    public class Variable
+    public class Variable : TypedValue
     {
         /// <summary>
-        /// The current value of the object.
+        /// If the variable should be marked as constant.
         /// </summary>
-        private object _value;
+        public readonly bool IsConstant = false;
 
         /// <summary>
-        /// The current data type.
+        /// The current value of the variable.
         /// </summary>
-        public DataType Type
+        public override object Value
         {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// The current value of the object.
-        /// </summary>
-        /// <exception cref="ReassignConstantError">Thrown when a constant is reassigned.</exception>
-        public object Value
-        {
-            get
-            {
-                return _value;
-            }
-
             set
             {
                 if (IsConstant)
@@ -65,43 +49,18 @@ namespace Interpreter
                     throw new ReassignConstantError("Cannot reassign a constant.");
                 }
 
-                Type type = value.GetType();
-                if (type == typeof(int))
-                {
-                    Type = DataType.Integer;
-                }
-                else if (type == typeof(float))
-                {
-                    Type = DataType.Float;
-                }
-                else if (type == typeof(string))
-                {
-                    Type = DataType.String;
-                }
-                else
-                {
-                    // Silently fail.
-                    Type = DataType.Invalid;
-                    return;
-                }
-
-                _value = value;
+                base.Value = value;
             }
         }
-
-        /// <summary>
-        /// If the variable should be marked as constant.
-        /// </summary>
-        public readonly bool IsConstant;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="value">Value of the variable.</param>
         /// <param name="isConst">If the variable should be marked as constant.</param>
-        public Variable(object value = null, bool isConst = false)
+        /// <exception cref="UnsupportedDataTypeError">Thrown when trying to assign an unsupported data type.</exception>
+        public Variable(object value = null, bool isConst = false) : base(value)
         {
-            Value = value;
             IsConstant = isConst;
         }
     }

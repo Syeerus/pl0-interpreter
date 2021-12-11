@@ -169,4 +169,16 @@ namespace Interpreter.Errors
         /// <param name="message">Error message.</param>
         public ReassignConstantError(string message) : base(message) { }
     }
+
+    /// <summary>
+    /// Error for when trying to assign an unsupported data type.
+    /// </summary>
+    public class UnsupportedDataTypeError : RuntimeError
+    {
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="message">Error message.</param>
+        public UnsupportedDataTypeError(string message) : base(message) { }
+    }
 }
