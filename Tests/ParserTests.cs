@@ -26,7 +26,7 @@ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Interpreter.Parser.AST;
 using Interpreter.Parser;
-using Interpreter;
+using Interpreter.Errors;
 
 namespace Tests
 {

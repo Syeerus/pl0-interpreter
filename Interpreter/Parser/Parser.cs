@@ -24,6 +24,7 @@
 
 using System;
 using Interpreter.Parser.AST;
+using Interpreter.Errors;
 
 namespace Interpreter.Parser
 {

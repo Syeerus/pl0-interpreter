@@ -56,7 +56,7 @@
     <Compile Include="Parser\AST\VariableDeclarationsNode.cs" />
     <Compile Include="Parser\AST\WhileStatementNode.cs" />
     <Compile Include="Parser\DataType.cs" />
-    <Compile Include="Parser\Errors.cs" />
+    <Compile Include="Errors.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Parser\Scanner.cs" />
     <Compile Include="Parser\Token.cs" />

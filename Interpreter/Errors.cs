@@ -24,12 +24,12 @@
 
 using System;
 
-namespace Interpreter.Parser
+namespace Interpreter.Errors
 {
     /// <summary>
-    /// Base parser error class.
+    /// Base parsing error class.
     /// </summary>
-    public abstract class Error : Exception
+    public abstract class ParseError : Exception
     {
         /// <summary>
         /// Line position of the error.
@@ -47,7 +47,7 @@ namespace Interpreter.Parser
         /// <param name="line">Line position of the error.</param>
         /// <param name="column">Column position of the error.</param>
         /// <param name="message">Error message.</param>
-        public Error(int line, int column, string message) : base(message)
+        public ParseError(int line, int column, string message) : base(message)
         {
             Line = line;
             Column = column;
@@ -66,7 +66,7 @@ namespace Interpreter.Parser
     /// <summary>
     /// Error for an unterminated string.
     /// </summary>
-    public class UnterminatedStringError : Error
+    public class UnterminatedStringError : ParseError
     {
         /// <summary>
         /// Constructor.
@@ -80,7 +80,7 @@ namespace Interpreter.Parser
     /// <summary>
     /// Error for improper syntax.
     /// </summary>
-    public class SyntaxError : Error
+    public class SyntaxError : ParseError
     {
         /// <summary>
         /// Constructor.
@@ -89,5 +89,84 @@ namespace Interpreter.Parser
         /// <param name="column">Column position of the error.</param>
         /// <param name="message">Error message.</param>
         public SyntaxError(int line, int column, string message) : base(line, column, message) { }
+    }
+
+    /// <summary>
+    /// Base runtime error class.
+    /// </summary>
+    public abstract class RuntimeError : Exception
+    {
+        /// <summary>
+        /// Line position of the error. Can be set at anytime.
+        /// </summary>
+        public int Line;
+
+        /// <summary>
+        /// Column position of the error. Can be set at anytime.
+        /// </summary>
+        public int Column;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="message">Error message.</param>
+        public RuntimeError(string message) : base(message) { }
+
+        /// <summary>
+        /// Converts the error into a string.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return $"( {Line}, {Column} ) {Message}";
+        }
+    }
+
+    /// <summary>
+    /// Error for when a variable or procedure is not found at runtime.
+    /// </summary>
+    public class NameError : RuntimeError
+    {
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="message">Error message.</param>
+        public NameError(string message) : base(message) { }
+    }
+
+    /// <summary>
+    /// Error for when a variable or procedure is redeclared in the same scope.
+    /// </summary>
+    public class RedeclareError : RuntimeError
+    {
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="message">Error message.</param>
+        public RedeclareError(string message) : base(message) { }
+    }
+
+    /// <summary>
+    /// Error for when trying to divide by zero at runtime.
+    /// </summary>
+    public class DivideByZeroError : RuntimeError
+    {
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="message">Error message.</param>
+        public DivideByZeroError(string message) : base(message) { }
+    }
+
+    /// <summary>
+    /// Error for when trying to reassign a constant.
+    /// </summary>
+    public class ReassignConstantError : RuntimeError
+    {
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="message">Error message.</param>
+        public ReassignConstantError(string message) : base(message) { }
     }
 }

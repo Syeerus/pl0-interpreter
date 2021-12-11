@@ -23,6 +23,7 @@
  */
 
 using System;
+using Interpreter.Errors;
 
 namespace Interpreter.Parser
 {

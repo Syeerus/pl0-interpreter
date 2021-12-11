@@ -25,6 +25,7 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Interpreter.Parser;
+using Interpreter.Errors;
 
 namespace Tests
 {
