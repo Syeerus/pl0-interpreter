@@ -32,7 +32,6 @@ namespace Interpreter.Parser.AST
         Invalid,
         Plus = TokenType.Plus,
         Minus = TokenType.Minus,
-        Odd = TokenType.Odd
     }
 
     /// <summary>
