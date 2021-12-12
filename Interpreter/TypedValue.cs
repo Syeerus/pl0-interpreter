@@ -92,6 +92,7 @@ namespace Interpreter
         /// Constructor.
         /// </summary>
         /// <param name="value">Value to assign.</param>
+        /// <exception cref="UnsupportedDataTypeError">Thrown when an unsupported data type is given.</exception>
         public TypedValue(object value = null)
         {
             Value = value;
