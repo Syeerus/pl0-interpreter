@@ -107,6 +107,12 @@ namespace Interpreter.Parser
                 block.Body.Add(statement);
             }
 
+            if (Matches(TokenType.Semicolon))
+            {
+                // Trailing semicolon.
+                Advance();
+            }
+
             return block;
         }
 
