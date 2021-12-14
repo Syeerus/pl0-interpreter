@@ -25,7 +25,7 @@
 namespace Interpreter.Parser.AST
 {
     /// <summary>
-    /// Binary operators.
+    /// Binary operators (sans conditional).
     /// </summary>
     public enum BinaryOperator
     {
@@ -33,13 +33,7 @@ namespace Interpreter.Parser.AST
         Plus = TokenType.Plus,
         Minus = TokenType.Minus,
         Star = TokenType.Star,
-        Slash = TokenType.Slash,
-        Equals = TokenType.Equals,
-        Hash = TokenType.Hash,
-        LessThan = TokenType.LessThan,
-        LessThanEquals = TokenType.LessThanEquals,
-        GreaterThan = TokenType.GreaterThan,
-        GreaterThanEquals = TokenType.GreaterThanEquals,
+        Slash = TokenType.Slash
     }
 
     /// <summary>
