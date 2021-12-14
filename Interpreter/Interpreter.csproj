@@ -36,6 +36,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Evaluator.cs" />
+    <Compile Include="Parser\AST\ExitNode.cs" />
     <Compile Include="Scope.cs" />
     <Compile Include="Parser\AST\AssignmentStatementNode.cs" />
     <Compile Include="Parser\AST\BeginStatementNode.cs" />
@@ -62,6 +64,7 @@
     <Compile Include="Parser\Scanner.cs" />
     <Compile Include="Parser\Token.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="TypedValue.cs" />
     <Compile Include="Variable.cs" />
   </ItemGroup>
   <ItemGroup>

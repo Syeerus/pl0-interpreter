@@ -113,6 +113,18 @@ namespace Interpreter.Errors
         public RuntimeError(string message) : base(message) { }
 
         /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="line">Line position in the source code.</param>
+        /// <param name="column">Column in the source code.</param>
+        /// <param name="message">The message to use.</param>
+        public RuntimeError(int line, int column, string message) : base(message)
+        {
+            Line = line;
+            Column = column;
+        }
+
+        /// <summary>
         /// Converts the error into a string.
         /// </summary>
         /// <returns></returns>
@@ -180,5 +192,46 @@ namespace Interpreter.Errors
         /// </summary>
         /// <param name="message">Error message.</param>
         public UnsupportedDataTypeError(string message) : base(message) { }
+    }
+
+    /// <summary>
+    /// Error for when an unrecognized AST node is encountered.
+    /// If this happens, something is seriously wrong.
+    /// </summary>
+    public class UnrecognizedNodeError : RuntimeError
+    {
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="line">Line position in the source code.</param>
+        /// <param name="column">Column in the source code.</param>
+        /// <param name="message">The message to use.</param>
+        public UnrecognizedNodeError(int line, int column, string message) : base(line, column, message) { }
+    }
+
+    /// <summary>
+    /// Error for when working with incompatible data types.
+    /// </summary>
+    public class TypeError : RuntimeError
+    {
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="line">Line position in the source code.</param>
+        /// <param name="column">Column in the source code.</param>
+        /// <param name="message">The message to use.</param>
+        public TypeError(int line, int column, string message) : base(line, column, message) { }
+    }
+
+    /// <summary>
+    /// Error for unexpected operators.
+    /// </summary>
+    public class OperatorError : RuntimeError
+    {
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="message">Error message.</param>
+        public OperatorError(string message) : base(message) { }
     }
 }
