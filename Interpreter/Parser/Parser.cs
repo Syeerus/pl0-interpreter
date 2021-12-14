@@ -112,6 +112,13 @@ namespace Interpreter.Parser
                 // Trailing semicolon.
                 Advance();
             }
+            else if (Matches(TokenType.Dot))
+            {
+                // End of program.
+                // Don't advance because Parse() asserts the dot.
+                t = _currentToken;
+                block.Body.Add(new ExitNode(t.Offset, t.Line, t.Column));
+            }
 
             return block;
         }
