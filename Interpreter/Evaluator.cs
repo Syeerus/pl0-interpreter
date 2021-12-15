@@ -34,6 +34,9 @@ namespace Interpreter
     /// </summary>
     public class Evaluator
     {
+        /// <summary>
+        /// Enables/disables debug mode.
+        /// </summary>
         public bool IsDebugMode = false;
 
         /// <summary>
@@ -55,11 +58,13 @@ namespace Interpreter
         /// <exception cref="SyntaxError">Raised when a syntax error occurs.</exception>
         /// <exception cref="UnterminatedStringError">Raised when an unterminated string is encountered.</exception>
         /// <exception cref="NameError">Raised when a name is not found.</exception>
+        /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
         /// <exception cref="RedeclareError">Raised when trying to define a name twice in the same scope.</exception>
         /// <exception cref="ReassignConstantError">Raised when trying to reassign a constant.</exception>
         /// <exception cref="DivideByZeroError">Raised when trying to divide by zero.</exception>
         /// <exception cref="UnsupportedDataTypeError">Raised when trying to assign an unsupported data type.</exception>
         /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
+        /// <exception cref="TypeError">Raised when operating or casting on incompatible types.</exception>
         public void Run(string source)
         {
             var parser = new Parser.Parser(source);
@@ -71,11 +76,13 @@ namespace Interpreter
         /// </summary>
         /// <param name="program">The program to run.</param>
         /// <exception cref="NameError">Raised when a name is not found.</exception>
+        /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
         /// <exception cref="RedeclareError">Raised when trying to define a name twice in the same scope.</exception>
         /// <exception cref="ReassignConstantError">Raised when trying to reassign a constant.</exception>
         /// <exception cref="DivideByZeroError">Raised when trying to divide by zero.</exception>
         /// <exception cref="UnsupportedDataTypeError">Raised when trying to assign an unsupported data type.</exception>
         /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
+        /// <exception cref="TypeError">Raised when operating or casting on incompatible types.</exception>
         public void Run(ProgramNode program)
         {
             if (IsDebugMode)
@@ -93,9 +100,9 @@ namespace Interpreter
         /// <param name="right">Right integer.</param>
         /// <param name="op">Operator.</param>
         /// <returns>The result of the operation.</returns>
-        /// <exception cref="DivideByZeroError">Thrown when trying to divide by zero.</exception>
-        /// <exception cref="OperatorError">Thrown on an invalid binary operator.</exception>
-        private static int DoIntBinOp(int left, int right, BinaryOperator op)
+        /// <exception cref="DivideByZeroError">Raised when trying to divide by zero.</exception>
+        /// <exception cref="OperatorError">Raised on an invalid binary operator.</exception>
+        private static int DoBinaryOp(int left, int right, BinaryOperator op)
         {
             switch (op)
             {
@@ -123,9 +130,9 @@ namespace Interpreter
         /// <param name="right">Right float.</param>
         /// <param name="op">Operator.</param>
         /// <returns>The result of the operation.</returns>
-        /// <exception cref="DivideByZeroError">Thrown when trying to divide by zero.</exception>
-        /// <exception cref="OperatorError">Thrown on an invalid binary operator.</exception>
-        private static float DoFloatBinOp(float left, float right, BinaryOperator op)
+        /// <exception cref="DivideByZeroError">Raised when trying to divide by zero.</exception>
+        /// <exception cref="OperatorError">Raised on an invalid binary operator.</exception>
+        private static float DoBinaryOp(float left, float right, BinaryOperator op)
         {
             switch (op)
             {
@@ -143,6 +150,64 @@ namespace Interpreter
                     return left / right;
                 default:
                     throw new OperatorError($"Unexpected binary operator: {op}");
+            }
+        }
+
+        /// <summary>
+        /// Performs a comparison operation.
+        /// </summary>
+        /// <param name="left">Left integer.</param>
+        /// <param name="right">Right integer.</param>
+        /// <param name="op">Comparison operator.</param>
+        /// <returns>If the comparison is true or false.</returns>
+        /// <exception cref="OperatorError">Raised on an invalid binary operator.</exception>
+        private static bool DoComparisonOp(int left, int right, ConditionalOperator op)
+        {
+            switch (op)
+            {
+                case ConditionalOperator.Equals:
+                    return left == right;
+                case ConditionalOperator.NotEquals:
+                    return left != right;
+                case ConditionalOperator.GreaterThan:
+                    return left > right;
+                case ConditionalOperator.GreaterThanEquals:
+                    return left >= right;
+                case ConditionalOperator.LessThan:
+                    return left < right;
+                case ConditionalOperator.LessThanEquals:
+                    return left <= right;
+                default:
+                    throw new OperatorError($"Unexpected comparison operator: {op}");
+            }
+        }
+
+        /// <summary>
+        /// Performs a comparison operation.
+        /// </summary>
+        /// <param name="left">Left float.</param>
+        /// <param name="right">Right float.</param>
+        /// <param name="op">Comparison operator.</param>
+        /// <returns>If the comparison is true or false.</returns>
+        /// <exception cref="OperatorError">Raised on an invalid comparison operator.</exception>
+        private static bool DoComparisonOp(float left, float right, ConditionalOperator op)
+        {
+            switch (op)
+            {
+                case ConditionalOperator.Equals:
+                    return left == right;
+                case ConditionalOperator.NotEquals:
+                    return left != right;
+                case ConditionalOperator.GreaterThan:
+                    return left > right;
+                case ConditionalOperator.GreaterThanEquals:
+                    return left >= right;
+                case ConditionalOperator.LessThan:
+                    return left < right;
+                case ConditionalOperator.LessThanEquals:
+                    return left <= right;
+                default:
+                    throw new OperatorError($"Unexpected comparison operator: {op}");
             }
         }
 
@@ -173,11 +238,13 @@ namespace Interpreter
         /// </summary>
         /// <param name="node">The block to run.</param>
         /// <exception cref="NameError">Raised when a name is not found.</exception>
+        /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
         /// <exception cref="RedeclareError">Raised when trying to define a name twice in the same scope.</exception>
         /// <exception cref="ReassignConstantError">Raised when trying to reassign a constant.</exception>
         /// <exception cref="DivideByZeroError">Raised when trying to divide by zero.</exception>
         /// <exception cref="UnsupportedDataTypeError">Raised when trying to assign an unsupported data type.</exception>
         /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
+        /// <exception cref="TypeError">Raised when operating or casting on incompatible types.</exception>
         private void RunBlockNode(BlockStatementNode node)
         {
             if (node == null)
@@ -203,11 +270,13 @@ namespace Interpreter
         /// </summary>
         /// <param name="node">Node to run.</param>
         /// <exception cref="NameError">Raised when a name is not found.</exception>
+        /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
         /// <exception cref="RedeclareError">Raised when trying to define a name twice in the same scope.</exception>
         /// <exception cref="ReassignConstantError">Raised when trying to reassign a constant.</exception>
         /// <exception cref="DivideByZeroError">Raised when trying to divide by zero.</exception>
         /// <exception cref="UnsupportedDataTypeError">Raised when trying to assign an unsupported data type.</exception>
         /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
+        /// <exception cref="TypeError">Raised when operating or casting on incompatible types.</exception>
         private void RunNode(Node node)
         {
             Type type = node.GetType();
@@ -254,6 +323,7 @@ namespace Interpreter
             else if (type == typeof(ExitNode))
             {
                 // The end.
+                _scopes.Clear();
             }
             else
             {
@@ -265,6 +335,12 @@ namespace Interpreter
         /// Runs a variable declarations node.
         /// </summary>
         /// <param name="node">The variable declarations node.</param>
+        /// <exception cref="RedeclareError">Raised when trying to redeclare a variable in the same scope.</exception>
+        /// <exception cref="OperatorError">Raised when an unexpected operator is encountered in an expression.</exception>
+        /// <exception cref="DivideByZeroError">Raised when attempting to divide by zero.</exception>
+        /// <exception cref="TypeError">Raised when operating or casting on incompatible types.</exception>
+        /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
+        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
         private void RunVarDeclarations(VariableDeclarationsNode node)
         {
             Scope scope = _scopes.Peek();
@@ -272,7 +348,7 @@ namespace Interpreter
             {
                 if (n.IsConstant)
                 {
-                    TypedValue value = RunExpressionNode(n.Value);
+                    TypedValue value = EvaluateExpressionNode(n.Value);
                     scope.CreateVar(n.Name, value.Value, true);
                 }
                 else
@@ -286,6 +362,7 @@ namespace Interpreter
         /// Runs a procedure declaration node.
         /// </summary>
         /// <param name="node">The procedure declaration node.</param>
+        /// <exception cref="RedeclareError">Raised when trying to redeclare a procedure in the same scope.</exception>
         private void RunProcedureDeclaration(ProcedureDeclarationNode node)
         {
             Scope scope = _scopes.Peek();
@@ -296,23 +373,30 @@ namespace Interpreter
         /// Runs an assignment node.
         /// </summary>
         /// <param name="node">The assignment node.</param>
+        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
+        /// <exception cref="ReassignConstantError">Raised when trying to reassign a constant.</exception>
+        /// <exception cref="DivideByZeroError">Raised when attempting to divide by zero.</exception>
+        /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
+        /// <exception cref="TypeError">Raised when operating or casting on incompatible types.</exception>
+        /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
         private void RunAssignmentNode(AssignmentStatementNode node)
         {
-            object value = RunExpressionNode(node.Value);
+            TypedValue value = EvaluateExpressionNode(node.Value);
             Scope scope = _scopes.Peek();
-            scope.SetVar(node.Identifier.Name, value);
+            scope.SetVar(node.Identifier.Name, value.Value);
         }
 
         /// <summary>
-        /// Runs an expression node.
+        /// Evaluates an expression node.
         /// </summary>
         /// <param name="node">The expression node.</param>
         /// <returns>Result of the expression.</returns>
-        /// <exception cref="DivideByZeroError">Thrown when attempting to divide by zero.</exception>
-        /// <exception cref="OperatorError">Thrown when an unexpected operator is encountered.</exception>
-        /// <exception cref="TypeError">Thrown when operating or casting on incompatible types.</exception>
-        /// <exception cref="UnrecognizedNodeError">Thrown when an unrecognized node is encountered.</exception>
-        private TypedValue RunExpressionNode(Node node)
+        /// <exception cref="DivideByZeroError">Raised when attempting to divide by zero.</exception>
+        /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
+        /// <exception cref="TypeError">Raised when operating or casting on incompatible types.</exception>
+        /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
+        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
+        private TypedValue EvaluateExpressionNode(Node node)
         {
             TypedValue value;
             Type type = node.GetType();
@@ -345,7 +429,7 @@ namespace Interpreter
             else if (type == typeof(TypecastNode))
             {
                 var cast = (TypecastNode)node;
-                value = RunExpressionNode(cast.Expression);
+                value = EvaluateExpressionNode(cast.Expression);
                 switch (cast.CastType)
                 {
                     case DataType.Integer:
@@ -398,6 +482,10 @@ namespace Interpreter
                 var identifier = (IdentifierNode)node;
                 Scope scope = _scopes.Peek();
                 value = scope.GetVar(identifier.Name);
+                if (value == null)
+                {
+                    throw new NameError(identifier.Line, identifier.Column, $"Name '{identifier.Name}' not found.");
+                }
             }
             else
             {
@@ -412,13 +500,14 @@ namespace Interpreter
         /// </summary>
         /// <param name="node">The unary node.</param>
         /// <returns>Result of the unary expression.</returns>
-        /// <exception cref="DivideByZeroError">Thrown when attempting to divide by zero.</exception>
-        /// <exception cref="OperatorError">Thrown when an unexpected operator is encountered.</exception>
-        /// <exception cref="TypeError">Thrown when operating or casting on incompatible types.</exception>
-        /// <exception cref="UnrecognizedNodeError">Thrown when an unrecognized node is encountered.</exception>
+        /// <exception cref="DivideByZeroError">Raised when attempting to divide by zero.</exception>
+        /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
+        /// <exception cref="TypeError">Raised when operating or casting on incompatible types.</exception>
+        /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
+        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
         private TypedValue RunUnaryNode(UnaryExpressionNode node)
         {
-            TypedValue value = RunExpressionNode(node.Expression);
+            TypedValue value = EvaluateExpressionNode(node.Expression);
             if (node.Operator == UnaryOperator.Plus)
             {
                 return value;
@@ -444,14 +533,16 @@ namespace Interpreter
         /// </summary>
         /// <param name="node">The binary node.</param>
         /// <returns>Result of the binary expression.</returns>
-        /// <exception cref="DivideByZeroError">Thrown when attempting to divide by zero.</exception>
-        /// <exception cref="OperatorError">Thrown when an unexpected operator is encountered.</exception>
-        /// <exception cref="TypeError">Thrown when operating on incompatible types.</exception>
-        /// <exception cref="UnrecognizedNodeError">Thrown when an unrecognized node is encountered.</exception>
+        /// <exception cref="DivideByZeroError">Raised when attempting to divide by zero.</exception>
+        /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
+        /// <exception cref="TypeError">Raised when operating on incompatible types.</exception>
+        /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
+        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
         private TypedValue RunBinaryNode(BinaryExpressionNode node)
         {
-            TypedValue left = RunExpressionNode(node.Left);
-            TypedValue right = RunExpressionNode(node.Right);
+            TypedValue left = EvaluateExpressionNode(node.Left);
+            TypedValue right = EvaluateExpressionNode(node.Right);
+
             switch (left.Type)
             {
                 case DataType.Integer:
@@ -460,7 +551,7 @@ namespace Interpreter
                         case DataType.Integer:
                             try
                             {
-                                left.Value = DoIntBinOp((int)left.Value, (int)right.Value, node.Operator);
+                                left.Value = DoBinaryOp((int)left.Value, (int)right.Value, node.Operator);
                             }
                             catch (RuntimeError ex)
                             {
@@ -473,7 +564,7 @@ namespace Interpreter
                         case DataType.Float:
                             try
                             {
-                                left.Value = DoFloatBinOp((float)left.Value, (float)right.Value, node.Operator);
+                                left.Value = DoBinaryOp((int)left.Value, (float)right.Value, node.Operator);
                             }
                             catch (RuntimeError ex)
                             {
@@ -491,12 +582,24 @@ namespace Interpreter
                     switch (right.Type)
                     {
                         case DataType.Integer:
+                            try
+                            {
+                                left.Value = DoBinaryOp((float)left.Value, (int)right.Value, node.Operator);
+                            }
+                            catch (RuntimeError ex)
+                            {
+                                // Update with position information.
+                                ex.Line = node.Right.Line;
+                                ex.Column = node.Right.Column;
+                                throw ex;
+                            }
+                            break;
                         case DataType.Float:
                             try
                             {
-                                left.Value = DoFloatBinOp((float)left.Value, (float)right.Value, node.Operator);
+                                left.Value = DoBinaryOp((float)left.Value, (float)right.Value, node.Operator);
                             }
-                            catch (DivideByZeroError ex)
+                            catch (RuntimeError ex)
                             {
                                 // Update with position information.
                                 ex.Line = node.Right.Line;
@@ -509,11 +612,18 @@ namespace Interpreter
                     }
                     break;
                 case DataType.String:
+                    if (node.Operator != BinaryOperator.Plus)
+                    {
+                        throw new OperatorError(node.Line, node.Column, $"Invalid string operator: {node.Operator}");
+                    }
+
                     switch (right.Type)
                     {
                         case DataType.String:
                             left.Value = (string)left.Value + (string)right.Value;
                             break;
+                        default:
+                            throw new TypeError(node.Line, node.Column, $"Incompatible data type for string concatenation: {right.Type}");
                     }
                     break;
                 default:
@@ -528,6 +638,7 @@ namespace Interpreter
         /// </summary>
         /// <param name="node">The call statement node.</param>
         /// <exception cref="NameError">Raised when a name is not found.</exception>
+        /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
         /// <exception cref="RedeclareError">Raised when trying to define a name twice in the same scope.</exception>
         /// <exception cref="ReassignConstantError">Raised when trying to reassign a constant.</exception>
         /// <exception cref="DivideByZeroError">Raised when trying to divide by zero.</exception>
@@ -537,6 +648,11 @@ namespace Interpreter
         {
             Scope scope = _scopes.Peek();
             ProcedureDeclarationNode procedure = scope.GetProcedure(node.Identifier.Name);
+            if (procedure == null)
+            {
+                throw new NameError(node.Line, node.Column, $"Procedure '{node.Identifier.Name}' not found.");
+            }
+
             RunNode(procedure.Body);
         }
 
@@ -544,18 +660,38 @@ namespace Interpreter
         /// Runs an input statement node.
         /// </summary>
         /// <param name="node">The input statement node.</param>
+        /// <exception cref="NameError">Raised when the input variable cannot be found.</exception>
         private void RunInputNode(InputStatementNode node)
         {
-            throw new NotImplementedException();
+            Scope scope = _scopes.Peek();
+            Variable variable = scope.GetVar(node.Identifier.Name);
+            if (variable == null)
+            {
+                throw new NameError(node.Line, node.Column, $"Variable '{node.Identifier.Name}' not found.");
+            }
+
+            try
+            {
+                variable.Value = Console.ReadLine();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occured: {ex.Message}");
+            }
         }
 
         /// <summary>
         /// Runs a print statement node.
         /// </summary>
         /// <param name="node">The print statement node.</param>
+        /// <exception cref="DivideByZeroError">Raised when attempting to divide by zero.</exception>
+        /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
+        /// <exception cref="TypeError">Raised when operating or casting on incompatible types.</exception>
+        /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
+        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
         private void RunPrintNode(PrintStatementNode node)
         {
-            TypedValue value = RunExpressionNode(node.Expression);
+            TypedValue value = EvaluateExpressionNode(node.Expression);
             Console.WriteLine(value.Value);
         }
 
@@ -563,27 +699,125 @@ namespace Interpreter
         /// Runs a begin statement node.
         /// </summary>
         /// <param name="node">The begin statement node.</param>
+        /// <exception cref="NameError">Raised when a name is not found.</exception>
+        /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
+        /// <exception cref="RedeclareError">Raised when trying to define a name twice in the same scope.</exception>
+        /// <exception cref="ReassignConstantError">Raised when trying to reassign a constant.</exception>
+        /// <exception cref="DivideByZeroError">Raised when trying to divide by zero.</exception>
+        /// <exception cref="UnsupportedDataTypeError">Raised when trying to assign an unsupported data type.</exception>
+        /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
         private void RunBeginNode(BeginStatementNode node)
         {
-            throw new NotImplementedException();
+            foreach (Node n in node.Body)
+            {
+                RunNode(n);
+            }
+        }
+
+        /// <summary>
+        /// Runs a condition node
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        /// <exception cref="DivideByZeroError">Raised when attempting to divide by zero.</exception>
+        /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
+        /// <exception cref="TypeError">Raised when operating or casting on incompatible types.</exception>
+        /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
+        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
+        private bool EvaluateConditionNode(ConditionNode node)
+        {
+            TypedValue left = EvaluateExpressionNode(node.Left);
+            if (node.HasOdd)
+            {
+                switch (left.Type)
+                {
+                    case DataType.Integer:
+                        return (int)left.Value % 2 != 0;
+                    case DataType.Float:
+                        return (float)left.Value % 2 != 0;
+                    default:
+                        throw new TypeError(node.Left.Line, node.Left.Column, $"Odd conditions can only work with integers and floats, but got type: {left.Type}");
+                }
+            }
+
+            if (node.Operator == ConditionalOperator.Invalid)
+            {
+                // Do the checking here instead of using try/catch blocks with DoComparisonOp calls because that's messier.
+                throw new OperatorError(node.Line, node.Column, $"Invalid comparison operator: {node.Operator}");
+            }
+
+            TypedValue right = EvaluateExpressionNode(node.Right);
+            switch (left.Type)
+            {
+                case DataType.Integer:
+                    switch (right.Type)
+                    {
+                        case DataType.Integer:
+                            return DoComparisonOp((int)left.Value, (int)right.Value, node.Operator);
+                        case DataType.Float:
+                            return DoComparisonOp((int)left.Value, (float)right.Value, node.Operator);
+                        default:
+                            throw new TypeError(node.Line, node.Column, $"Cannot compare types {left.Type} and {right.Type}");
+                    }
+                case DataType.Float:
+                    switch (right.Type)
+                    {
+                        case DataType.Integer:
+                           return DoComparisonOp((float)left.Value, (int)right.Value, node.Operator);
+                        case DataType.Float:
+                            return DoComparisonOp((float)left.Value, (float)right.Value, node.Operator);
+                        default:
+                            throw new TypeError(node.Line, node.Column, $"Cannot compare types {left.Type} and {right.Type}");
+                    }
+                case DataType.String:
+                    if (right.Type != DataType.String)
+                    {
+                        throw new TypeError(node.Line, node.Column, $"Cannot compare types {left.Type} and {right.Type}");
+                    }
+                    return (string)left.Value == (string)right.Value;
+                default:
+                    throw new TypeError(node.Left.Line, node.Left.Column, $"Cannot do comparison operation with data type: {left.Type}");
+            }
         }
 
         /// <summary>
         /// Runs an if statement node.
         /// </summary>
         /// <param name="node">The if statement node.</param>
+        /// <exception cref="DivideByZeroError">Raised when attempting to divide by zero.</exception>
+        /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
+        /// <exception cref="TypeError">Raised when operating or casting on incompatible types.</exception>
+        /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
+        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
+        /// <exception cref="UnsupportedDataTypeError">Raised when trying to assign an unsupported data type.</exception>
+        /// <exception cref="RedeclareError">Raised when trying to define a name twice in the same scope.</exception>
+        /// <exception cref="ReassignConstantError">Raised when trying to reassign a constant.</exception>
         private void RunIfNode(IfStatementNode node)
         {
-            throw new NotImplementedException();
+            if (EvaluateConditionNode(node.Condition))
+            {
+                RunNode(node.Body);
+            }
         }
 
         /// <summary>
         /// Runs a while statement node.
         /// </summary>
         /// <param name="node">The while statement node.</param>
+        /// <exception cref="DivideByZeroError">Raised when attempting to divide by zero.</exception>
+        /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
+        /// <exception cref="TypeError">Raised when operating or casting on incompatible types.</exception>
+        /// <exception cref="RedeclareError">Raised when trying to define a name twice in the same scope.</exception>
+        /// <exception cref="ReassignConstantError">Raised when trying to reassign a constant.</exception>
+        /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
+        /// <exception cref="UnsupportedDataTypeError">Raised when trying to assign an unsupported data type.</exception>
+        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
         private void RunWhileNode(WhileStatementNode node)
         {
-            throw new NotImplementedException();
+            while (EvaluateConditionNode(node.Condition))
+            {
+                RunNode(node.Body);
+            }
         }
     }
 }

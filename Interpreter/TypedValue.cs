@@ -80,7 +80,7 @@ namespace Interpreter
                     }
                     else
                     {
-                        throw new UnsupportedDataTypeError("Cannot assign an unsupported data type.");
+                        throw new UnsupportedDataTypeError($"Cannot assign an unsupported data type: {type}");
                     }
                 }
 

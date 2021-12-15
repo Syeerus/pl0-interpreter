@@ -144,6 +144,14 @@ namespace Interpreter.Errors
         /// </summary>
         /// <param name="message">Error message.</param>
         public NameError(string message) : base(message) { }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="line">Line position in the source code.</param>
+        /// <param name="column">Column in the source code.</param>
+        /// <param name="message">The message to use.</param>
+        public NameError(int line, int column, string message) : base(line, column, message) { }
     }
 
     /// <summary>
@@ -233,5 +241,13 @@ namespace Interpreter.Errors
         /// </summary>
         /// <param name="message">Error message.</param>
         public OperatorError(string message) : base(message) { }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="line">Line position in the source code.</param>
+        /// <param name="column">Column in the source code.</param>
+        /// <param name="message">The message to use.</param>
+        public OperatorError(int line, int column, string message) : base(line, column, message) { }
     }
 }

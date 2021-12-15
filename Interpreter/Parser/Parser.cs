@@ -46,6 +46,11 @@ namespace Interpreter.Parser
         private Token _currentToken;
 
         /// <summary>
+        /// Used for preventing duplicate exit nodes.
+        /// </summary>
+        private bool _hasExitNode = false;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="source">Source code to parse.</param>
@@ -112,12 +117,13 @@ namespace Interpreter.Parser
                 // Trailing semicolon.
                 Advance();
             }
-            else if (Matches(TokenType.Dot))
+            else if (Matches(TokenType.Dot) && !_hasExitNode)
             {
                 // End of program.
                 // Don't advance because Parse() asserts the dot.
                 t = _currentToken;
                 block.Body.Add(new ExitNode(t.Offset, t.Line, t.Column));
+                _hasExitNode = true;
             }
 
             return block;
