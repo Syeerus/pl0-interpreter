@@ -55,16 +55,16 @@ namespace Interpreter
         /// Parses and runs a source code string.
         /// </summary>
         /// <param name="source"></param>
-        /// <exception cref="SyntaxError">Raised when a syntax error occurs.</exception>
-        /// <exception cref="UnterminatedStringError">Raised when an unterminated string is encountered.</exception>
+        /// <exception cref="DivideByZeroError">Raised when trying to divide by zero.</exception>
         /// <exception cref="NameError">Raised when a name is not found.</exception>
         /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
-        /// <exception cref="RedeclareError">Raised when trying to define a name twice in the same scope.</exception>
         /// <exception cref="ReassignConstantError">Raised when trying to reassign a constant.</exception>
-        /// <exception cref="DivideByZeroError">Raised when trying to divide by zero.</exception>
-        /// <exception cref="UnsupportedDataTypeError">Raised when trying to assign an unsupported data type.</exception>
-        /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
+        /// <exception cref="RedeclareError">Raised when trying to define a name twice in the same scope.</exception>
+        /// <exception cref="SyntaxError">Raised when a syntax error occurs.</exception>
         /// <exception cref="TypeError">Raised when operating or casting on incompatible types.</exception>
+        /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
+        /// <exception cref="UnsupportedDataTypeError">Raised when trying to assign an unsupported data type.</exception>
+        /// <exception cref="UnterminatedStringError">Raised when an unterminated string is encountered.</exception>
         public void Run(string source)
         {
             var parser = new Parser.Parser(source);
@@ -75,13 +75,13 @@ namespace Interpreter
         /// Runs a program tree.
         /// </summary>
         /// <param name="program">The program to run.</param>
+        /// <exception cref="DivideByZeroError">Raised when trying to divide by zero.</exception>
         /// <exception cref="NameError">Raised when a name is not found.</exception>
         /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
-        /// <exception cref="RedeclareError">Raised when trying to define a name twice in the same scope.</exception>
         /// <exception cref="ReassignConstantError">Raised when trying to reassign a constant.</exception>
-        /// <exception cref="DivideByZeroError">Raised when trying to divide by zero.</exception>
-        /// <exception cref="UnsupportedDataTypeError">Raised when trying to assign an unsupported data type.</exception>
+        /// <exception cref="RedeclareError">Raised when trying to define a name twice in the same scope.</exception>
         /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
+        /// <exception cref="UnsupportedDataTypeError">Raised when trying to assign an unsupported data type.</exception>
         /// <exception cref="TypeError">Raised when operating or casting on incompatible types.</exception>
         public void Run(ProgramNode program)
         {
@@ -237,13 +237,13 @@ namespace Interpreter
         /// Runs a block node.
         /// </summary>
         /// <param name="node">The block to run.</param>
+        /// <exception cref="DivideByZeroError">Raised when trying to divide by zero.</exception>
         /// <exception cref="NameError">Raised when a name is not found.</exception>
         /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
-        /// <exception cref="RedeclareError">Raised when trying to define a name twice in the same scope.</exception>
         /// <exception cref="ReassignConstantError">Raised when trying to reassign a constant.</exception>
-        /// <exception cref="DivideByZeroError">Raised when trying to divide by zero.</exception>
-        /// <exception cref="UnsupportedDataTypeError">Raised when trying to assign an unsupported data type.</exception>
+        /// <exception cref="RedeclareError">Raised when trying to define a name twice in the same scope.</exception>
         /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
+        /// <exception cref="UnsupportedDataTypeError">Raised when trying to assign an unsupported data type.</exception>
         /// <exception cref="TypeError">Raised when operating or casting on incompatible types.</exception>
         private void RunBlockNode(BlockStatementNode node)
         {
@@ -269,13 +269,13 @@ namespace Interpreter
         /// Runs a node.
         /// </summary>
         /// <param name="node">Node to run.</param>
+        /// <exception cref="DivideByZeroError">Raised when trying to divide by zero.</exception>
         /// <exception cref="NameError">Raised when a name is not found.</exception>
         /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
-        /// <exception cref="RedeclareError">Raised when trying to define a name twice in the same scope.</exception>
         /// <exception cref="ReassignConstantError">Raised when trying to reassign a constant.</exception>
-        /// <exception cref="DivideByZeroError">Raised when trying to divide by zero.</exception>
-        /// <exception cref="UnsupportedDataTypeError">Raised when trying to assign an unsupported data type.</exception>
+        /// <exception cref="RedeclareError">Raised when trying to define a name twice in the same scope.</exception>
         /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
+        /// <exception cref="UnsupportedDataTypeError">Raised when trying to assign an unsupported data type.</exception>
         /// <exception cref="TypeError">Raised when operating or casting on incompatible types.</exception>
         private void RunNode(Node node)
         {
@@ -335,12 +335,12 @@ namespace Interpreter
         /// Runs a variable declarations node.
         /// </summary>
         /// <param name="node">The variable declarations node.</param>
-        /// <exception cref="RedeclareError">Raised when trying to redeclare a variable in the same scope.</exception>
-        /// <exception cref="OperatorError">Raised when an unexpected operator is encountered in an expression.</exception>
         /// <exception cref="DivideByZeroError">Raised when attempting to divide by zero.</exception>
+        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
+        /// <exception cref="OperatorError">Raised when an unexpected operator is encountered in an expression.</exception>
+        /// <exception cref="RedeclareError">Raised when trying to redeclare a variable in the same scope.</exception>
         /// <exception cref="TypeError">Raised when operating or casting on incompatible types.</exception>
         /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
-        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
         private void RunVarDeclarations(VariableDeclarationsNode node)
         {
             Scope scope = _scopes.Peek();
@@ -373,10 +373,10 @@ namespace Interpreter
         /// Runs an assignment node.
         /// </summary>
         /// <param name="node">The assignment node.</param>
-        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
-        /// <exception cref="ReassignConstantError">Raised when trying to reassign a constant.</exception>
         /// <exception cref="DivideByZeroError">Raised when attempting to divide by zero.</exception>
+        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
         /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
+        /// <exception cref="ReassignConstantError">Raised when trying to reassign a constant.</exception>
         /// <exception cref="TypeError">Raised when operating or casting on incompatible types.</exception>
         /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
         private void RunAssignmentNode(AssignmentStatementNode node)
@@ -393,9 +393,9 @@ namespace Interpreter
         /// <returns>Result of the expression.</returns>
         /// <exception cref="DivideByZeroError">Raised when attempting to divide by zero.</exception>
         /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
+        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
         /// <exception cref="TypeError">Raised when operating or casting on incompatible types.</exception>
         /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
-        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
         private TypedValue EvaluateExpressionNode(Node node)
         {
             TypedValue value;
@@ -501,10 +501,10 @@ namespace Interpreter
         /// <param name="node">The unary node.</param>
         /// <returns>Result of the unary expression.</returns>
         /// <exception cref="DivideByZeroError">Raised when attempting to divide by zero.</exception>
+        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
         /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
         /// <exception cref="TypeError">Raised when operating or casting on incompatible types.</exception>
         /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
-        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
         private TypedValue RunUnaryNode(UnaryExpressionNode node)
         {
             TypedValue value = EvaluateExpressionNode(node.Expression);
@@ -535,9 +535,9 @@ namespace Interpreter
         /// <returns>Result of the binary expression.</returns>
         /// <exception cref="DivideByZeroError">Raised when attempting to divide by zero.</exception>
         /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
+        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
         /// <exception cref="TypeError">Raised when operating on incompatible types.</exception>
         /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
-        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
         private TypedValue RunBinaryNode(BinaryExpressionNode node)
         {
             TypedValue left = EvaluateExpressionNode(node.Left);
@@ -637,13 +637,13 @@ namespace Interpreter
         /// Runs a call statement node.
         /// </summary>
         /// <param name="node">The call statement node.</param>
+        /// <exception cref="DivideByZeroError">Raised when trying to divide by zero.</exception>
         /// <exception cref="NameError">Raised when a name is not found.</exception>
         /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
-        /// <exception cref="RedeclareError">Raised when trying to define a name twice in the same scope.</exception>
         /// <exception cref="ReassignConstantError">Raised when trying to reassign a constant.</exception>
-        /// <exception cref="DivideByZeroError">Raised when trying to divide by zero.</exception>
-        /// <exception cref="UnsupportedDataTypeError">Raised when trying to assign an unsupported data type.</exception>
+        /// <exception cref="RedeclareError">Raised when trying to define a name twice in the same scope.</exception>
         /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
+        /// <exception cref="UnsupportedDataTypeError">Raised when trying to assign an unsupported data type.</exception>
         private void RunCallNode(CallStatementNode node)
         {
             Scope scope = _scopes.Peek();
@@ -685,10 +685,10 @@ namespace Interpreter
         /// </summary>
         /// <param name="node">The print statement node.</param>
         /// <exception cref="DivideByZeroError">Raised when attempting to divide by zero.</exception>
+        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
         /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
         /// <exception cref="TypeError">Raised when operating or casting on incompatible types.</exception>
         /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
-        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
         private void RunPrintNode(PrintStatementNode node)
         {
             TypedValue value = EvaluateExpressionNode(node.Expression);
@@ -699,13 +699,13 @@ namespace Interpreter
         /// Runs a begin statement node.
         /// </summary>
         /// <param name="node">The begin statement node.</param>
+        /// <exception cref="DivideByZeroError">Raised when trying to divide by zero.</exception>
         /// <exception cref="NameError">Raised when a name is not found.</exception>
         /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
-        /// <exception cref="RedeclareError">Raised when trying to define a name twice in the same scope.</exception>
         /// <exception cref="ReassignConstantError">Raised when trying to reassign a constant.</exception>
-        /// <exception cref="DivideByZeroError">Raised when trying to divide by zero.</exception>
-        /// <exception cref="UnsupportedDataTypeError">Raised when trying to assign an unsupported data type.</exception>
+        /// <exception cref="RedeclareError">Raised when trying to define a name twice in the same scope.</exception>
         /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
+        /// <exception cref="UnsupportedDataTypeError">Raised when trying to assign an unsupported data type.</exception>
         private void RunBeginNode(BeginStatementNode node)
         {
             foreach (Node n in node.Body)
@@ -721,9 +721,9 @@ namespace Interpreter
         /// <returns></returns>
         /// <exception cref="DivideByZeroError">Raised when attempting to divide by zero.</exception>
         /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
+        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
         /// <exception cref="TypeError">Raised when operating or casting on incompatible types.</exception>
         /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
-        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
         private bool EvaluateConditionNode(ConditionNode node)
         {
             TypedValue left = EvaluateExpressionNode(node.Left);
@@ -785,13 +785,13 @@ namespace Interpreter
         /// </summary>
         /// <param name="node">The if statement node.</param>
         /// <exception cref="DivideByZeroError">Raised when attempting to divide by zero.</exception>
+        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
         /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
+        /// <exception cref="ReassignConstantError">Raised when trying to reassign a constant.</exception>
+        /// <exception cref="RedeclareError">Raised when trying to define a name twice in the same scope.</exception>
         /// <exception cref="TypeError">Raised when operating or casting on incompatible types.</exception>
         /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
-        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
         /// <exception cref="UnsupportedDataTypeError">Raised when trying to assign an unsupported data type.</exception>
-        /// <exception cref="RedeclareError">Raised when trying to define a name twice in the same scope.</exception>
-        /// <exception cref="ReassignConstantError">Raised when trying to reassign a constant.</exception>
         private void RunIfNode(IfStatementNode node)
         {
             if (EvaluateConditionNode(node.Condition))
@@ -805,13 +805,13 @@ namespace Interpreter
         /// </summary>
         /// <param name="node">The while statement node.</param>
         /// <exception cref="DivideByZeroError">Raised when attempting to divide by zero.</exception>
+        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
         /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
-        /// <exception cref="TypeError">Raised when operating or casting on incompatible types.</exception>
-        /// <exception cref="RedeclareError">Raised when trying to define a name twice in the same scope.</exception>
         /// <exception cref="ReassignConstantError">Raised when trying to reassign a constant.</exception>
+        /// <exception cref="RedeclareError">Raised when trying to define a name twice in the same scope.</exception>
+        /// <exception cref="TypeError">Raised when operating or casting on incompatible types.</exception>
         /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
         /// <exception cref="UnsupportedDataTypeError">Raised when trying to assign an unsupported data type.</exception>
-        /// <exception cref="NameError">Raised when a variable or constant is not found.</exception>
         private void RunWhileNode(WhileStatementNode node)
         {
             while (EvaluateConditionNode(node.Condition))

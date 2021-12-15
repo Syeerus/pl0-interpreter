@@ -40,8 +40,8 @@ namespace Interpreter
         /// <summary>
         /// The current value of the variable.
         /// </summary>
-        /// <exception cref="UnsupportedDataTypeError">Thrown when trying to assign an unsupported data type.</exception>
         /// <exception cref="ReassignConstantError">Thrown when trying to reassign a constant.</exception>
+        /// <exception cref="UnsupportedDataTypeError">Thrown when trying to assign an unsupported data type.</exception>
         public override object Value
         {
             set
