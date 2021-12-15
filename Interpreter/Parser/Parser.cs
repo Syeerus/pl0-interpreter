@@ -43,32 +43,32 @@ namespace Interpreter.Parser
         /// </summary>
         private readonly Scanner _scanner;
 
-        private Token _currentToken;
-
         /// <summary>
-        /// Used for preventing duplicate exit nodes.
+        /// The current token from the scanner.
         /// </summary>
-        private bool _hasExitNode = false;
+        private Token _currentToken;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="source">Source code to parse.</param>
+        /// <exception cref="UnterminatedStringError">Raised if an unterminated string is encountered.</exception>
         public Parser(string source)
         {
             Source = source;
             _scanner = new Scanner(source);
+            Advance();
         }
 
         /// <summary>
         /// Parses the program source code.
         /// </summary>
         /// <returns>An AST of the program.</returns>
-        /// <exception cref="SyntaxError">Thrown on a syntax error.</exception>
-        /// <exception cref="UnterminatedStringError">Thrown if an unterminated string is encountered.</exception>
+        /// <exception cref="SyntaxError">Raised on a syntax error.</exception>
+        /// <exception cref="UnterminatedStringError">Raised if an unterminated string is encountered.</exception>
         public ProgramNode Parse()
         {
-            Token t = Advance();
+            Token t = _currentToken;
             var program = new ProgramNode(t.Offset, t.Line, t.Column);
             program.Body = ParseBlock();
             AssertMatches(TokenType.Dot);
@@ -79,17 +79,18 @@ namespace Interpreter.Parser
         /// Parses a block statement.
         /// </summary>
         /// <returns>An AST block statement or null if at the end of the program.</returns>
-        /// <exception cref="SyntaxError">Thrown on a syntax error.</exception>
-        /// <exception cref="UnterminatedStringError">Thrown if an unterminated string is encountered.</exception>
+        /// <exception cref="SyntaxError">Raised on a syntax error.</exception>
+        /// <exception cref="UnterminatedStringError">Raised if an unterminated string is encountered.</exception>
         public BlockStatementNode ParseBlock()
         {
-            if (IsAtEnd())
-            {
-                return null;
-            }
-
             Token t = _currentToken;
             var block = new BlockStatementNode(t.Offset, t.Line, t.Column);
+            if (IsAtEnd())
+            {
+                block.Body.Add(new ExitNode(t.Offset, t.Line, t.Column));
+                return block;
+            }
+
             if (Matches(TokenType.Const))
             {
                 block.Body.Add(ParseConstants());
@@ -116,14 +117,6 @@ namespace Interpreter.Parser
             {
                 // Trailing semicolon.
                 Advance();
-            }
-            else if (Matches(TokenType.Dot) && !_hasExitNode)
-            {
-                // End of program.
-                // Don't advance because Parse() asserts the dot.
-                t = _currentToken;
-                block.Body.Add(new ExitNode(t.Offset, t.Line, t.Column));
-                _hasExitNode = true;
             }
 
             return block;
@@ -248,8 +241,8 @@ namespace Interpreter.Parser
         /// Parses a statement.
         /// </summary>
         /// <returns>An AST node of a statement, or null if at the end or is an empty statement.</returns>
-        /// <exception cref="SyntaxError">Thrown on a syntax error.</exception>
-        /// <exception cref="UnterminatedStringError">Thrown if an unterminated string is encountered.</exception>
+        /// <exception cref="SyntaxError">Raised on a syntax error.</exception>
+        /// <exception cref="UnterminatedStringError">Raised if an unterminated string is encountered.</exception>
         private Node ParseStatement()
         {
             if (IsAtEnd())
@@ -352,8 +345,8 @@ namespace Interpreter.Parser
         /// Parses a condition.
         /// </summary>
         /// <returns>An AST condition node.</returns>
-        /// <exception cref="SyntaxError">Thrown on a syntax error.</exception>
-        /// <exception cref="UnterminatedStringError">Thrown if an unterminated string is encountered.</exception>
+        /// <exception cref="SyntaxError">Raised on a syntax error.</exception>
+        /// <exception cref="UnterminatedStringError">Raised if an unterminated string is encountered.</exception>
         private ConditionNode ParseCondition()
         {
             Token t = _currentToken;
@@ -385,8 +378,8 @@ namespace Interpreter.Parser
         /// Parses an expression.
         /// </summary>
         /// <returns>An AST expression node.</returns>
-        /// <exception cref="SyntaxError">Thrown on a syntax error.</exception>
-        /// <exception cref="UnterminatedStringError">Thrown if an unterminated string is encountered.</exception>
+        /// <exception cref="SyntaxError">Raised on a syntax error.</exception>
+        /// <exception cref="UnterminatedStringError">Raised if an unterminated string is encountered.</exception>
         private Node ParseExpression()
         {
             Node left = null;
@@ -432,8 +425,8 @@ namespace Interpreter.Parser
         /// Parses a term of the grammar.
         /// </summary>
         /// <returns>A node representing a term.</returns>
-        /// <exception cref="SyntaxError">Thrown on a syntax error.</exception>
-        /// <exception cref="UnterminatedStringError">Thrown if an unterminated string is encountered.</exception>
+        /// <exception cref="SyntaxError">Raised on a syntax error.</exception>
+        /// <exception cref="UnterminatedStringError">Raised if an unterminated string is encountered.</exception>
         private Node ParseTerm()
         {
             Token t = _currentToken;
@@ -456,8 +449,8 @@ namespace Interpreter.Parser
         /// Parses a factor of the grammar.
         /// </summary>
         /// <returns>A node representing a factor.</returns>
-        /// <exception cref="SyntaxError">Thrown on a syntax error.</exception>
-        /// <exception cref="UnterminatedStringError">Thrown if an unterminated string is encountered.</exception>
+        /// <exception cref="SyntaxError">Raised on a syntax error.</exception>
+        /// <exception cref="UnterminatedStringError">Raised if an unterminated string is encountered.</exception>
         private Node ParseFactor()
         {
             Token t = _currentToken;
@@ -502,8 +495,8 @@ namespace Interpreter.Parser
         /// Parses constants.
         /// </summary>
         /// <returns>A variable declarations node.</returns>
-        /// <exception cref="SyntaxError">Thrown on a syntax error.</exception>
-        /// <exception cref="UnterminatedStringError">Thrown if an unterminated string is encountered.</exception>
+        /// <exception cref="SyntaxError">Raised on a syntax error.</exception>
+        /// <exception cref="UnterminatedStringError">Raised if an unterminated string is encountered.</exception>
         private VariableDeclarationsNode ParseConstants()
         {
             Token t = _currentToken;
@@ -553,8 +546,8 @@ namespace Interpreter.Parser
         /// Parses variable declarations.
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="SyntaxError">Thrown on a syntax error.</exception>
-        /// <exception cref="UnterminatedStringError">Thrown if an unterminated string is encountered.</exception>
+        /// <exception cref="SyntaxError">Raised on a syntax error.</exception>
+        /// <exception cref="UnterminatedStringError">Raised if an unterminated string is encountered.</exception>
         private VariableDeclarationsNode ParseVariables()
         {
             Token t = _currentToken;
@@ -587,8 +580,8 @@ namespace Interpreter.Parser
         /// Parses a procedure declaration.
         /// </summary>
         /// <returns>Procedure declaration node.</returns>
-        /// <exception cref="SyntaxError">Thrown on a syntax error.</exception>
-        /// <exception cref="UnterminatedStringError">Thrown if an unterminated string is encountered.</exception>
+        /// <exception cref="SyntaxError">Raised on a syntax error.</exception>
+        /// <exception cref="UnterminatedStringError">Raised if an unterminated string is encountered.</exception>
         private ProcedureDeclarationNode ParseProcedure()
         {
             Token t = _currentToken;
@@ -598,8 +591,13 @@ namespace Interpreter.Parser
             procedure.Name = t.Value;
             Advance();
             AssertMatches(TokenType.Semicolon);
-            Advance();
+            t = Advance();
             procedure.Body = ParseBlock();
+            if (procedure.Body == null)
+            {
+                throw new SyntaxError(t.Line, t.Column, "Expected statement for procedure definition.");
+            }
+
             return procedure;
         }
 
@@ -607,7 +605,7 @@ namespace Interpreter.Parser
         /// Advances to the next token.
         /// </summary>
         /// <returns>The next token from the scanner.</returns>
-        /// <exception cref="UnterminatedStringError">Thrown if an unterminated string is encountered.</exception>
+        /// <exception cref="UnterminatedStringError">Raised if an unterminated string is encountered.</exception>
         private Token Advance()
         {
             //Console.WriteLine("Advancing " + _currentToken);
@@ -646,7 +644,7 @@ namespace Interpreter.Parser
         /// Asserts that the current token's type matches a given token type.
         /// </summary>
         /// <param name="expectedType">The type to check for.</param>
-        /// <exception cref="SyntaxError">Thrown if the token type doesn't match.</exception>
+        /// <exception cref="SyntaxError">Raised if the token type doesn't match.</exception>
         private void AssertMatches(TokenType expectedType)
         {
             if (!Matches(expectedType))

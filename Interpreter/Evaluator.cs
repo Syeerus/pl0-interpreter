@@ -90,7 +90,7 @@ namespace Interpreter
                 Console.WriteLine(program);
             }
 
-            RunBlockNode(program.Body);
+            RunBlockNode(program.Body, (_scopes.Count == 0));
         }
 
         /// <summary>
@@ -214,12 +214,9 @@ namespace Interpreter
         /// <summary>
         /// Creates a new scope.
         /// </summary>
-        /// <returns>The scope that was created.</returns>
-        private Scope CreateScope()
+        private void CreateScope()
         {
-            var scope = new Scope();
-            _scopes.Push(scope);
-            return scope;
+            _scopes.Push(new Scope());
         }
 
         /// <summary>
@@ -237,6 +234,7 @@ namespace Interpreter
         /// Runs a block node.
         /// </summary>
         /// <param name="node">The block to run.</param>
+        /// <param name="createScope">Whether to create a new scope.</param>
         /// <exception cref="DivideByZeroError">Raised when trying to divide by zero.</exception>
         /// <exception cref="NameError">Raised when a name is not found.</exception>
         /// <exception cref="OperatorError">Raised when an unexpected operator is encountered.</exception>
@@ -245,14 +243,18 @@ namespace Interpreter
         /// <exception cref="UnrecognizedNodeError">Raised when an unrecognized node is encountered.</exception>
         /// <exception cref="UnsupportedDataTypeError">Raised when trying to assign an unsupported data type.</exception>
         /// <exception cref="TypeError">Raised when operating or casting on incompatible types.</exception>
-        private void RunBlockNode(BlockStatementNode node)
+        private void RunBlockNode(BlockStatementNode node, bool createScope = true)
         {
             if (node == null)
             {
                 return;
             }
 
-            CreateScope();
+            if (createScope)
+            {
+                CreateScope();
+            }
+
             foreach (Node n in node.Body)
             {
                 RunNode(n);

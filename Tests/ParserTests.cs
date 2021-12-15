@@ -49,6 +49,8 @@ namespace Tests
             ProgramNode program = parser.Parse();
             Console.WriteLine(program);
             var expected = new ProgramNode(0, 1, 1);
+            expected.Body = new BlockStatementNode(0, 1, 1);
+            expected.Body.Body.Add(new ExitNode(0, 1, 1));
             Assert.AreEqual(expected.ToString(), program.ToString());
         }
 
