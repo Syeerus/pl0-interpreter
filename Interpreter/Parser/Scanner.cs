@@ -589,7 +589,8 @@ namespace Interpreter.Parser
 
             ++n;        // Skip end quote.
 
-            Token token = CreateToken(TokenType.StringLiteral, startLine, startColumn, Source.Substring(_offset + 1, n - 2));
+            string unescapedStr = UnescapeString(Source.Substring(_offset + 1, n - 2));
+            Token token = CreateToken(TokenType.StringLiteral, startLine, startColumn, unescapedStr);
             Advance(n);
             return token;
         }
@@ -626,6 +627,23 @@ namespace Interpreter.Parser
 
             Advance();
             return token;
+        }
+
+        /// <summary>
+        /// Unescapes escape characters in a string.
+        /// </summary>
+        /// <param name="str">String to unescape.</param>
+        /// <returns>String with unescaped characters.</returns>
+        private string UnescapeString(string str)
+        {
+            return str.Replace("\\n", "\n")
+                      .Replace("\\r", "\r")
+                      .Replace("\\t", "\t")
+                      .Replace("\\'", "'")
+                      .Replace("\\\"", "\"")
+                      .Replace("\\\\", "\\")
+                      .Replace("\\b", "\b")
+                      .Replace("\\f", "\f");
         }
 
         /// <summary>
