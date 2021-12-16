@@ -7,7 +7,7 @@
     <ProjectGuid>{1725AAE4-7088-4A04-9240-DE342E78AF02}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Interpreter</RootNamespace>
-    <AssemblyName>Interpreter</AssemblyName>
+    <AssemblyName>interpreter</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -31,6 +31,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Interpreter.Interpreter</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <None Include="App.config" />
