@@ -494,6 +494,9 @@ namespace Interpreter
                 {
                     throw new NameError(identifier.Line, identifier.Column, $"Name '{identifier.Name}' not found.");
                 }
+
+                // Copy the value of the variable or it could be overwritten.
+                value = value.Copy();
             }
             else
             {

@@ -89,6 +89,15 @@ namespace Interpreter
         }
 
         /// <summary>
+        /// Returns a copy of the value.
+        /// </summary>
+        /// <returns>A copy of this typed value.</returns>
+        public TypedValue Copy()
+        {
+            return new TypedValue(Value);
+        }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="value">Value to assign.</param>
