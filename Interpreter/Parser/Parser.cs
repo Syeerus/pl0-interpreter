@@ -91,20 +91,24 @@ namespace Interpreter.Parser
                 return block;
             }
 
-            if (Matches(TokenType.Const))
+            while (true)
             {
-                block.Body.Add(ParseConstants());
-            }
-            else if (Matches(TokenType.Var))
-            {
-                block.Body.Add(ParseVariables());
-            }
-            else if (Matches(TokenType.Procedure))
-            {
-                do
+                if (Matches(TokenType.Const))
+                {
+                    block.Body.Add(ParseConstants());
+                }
+                else if (Matches(TokenType.Var))
+                {
+                    block.Body.Add(ParseVariables());
+                }
+                else if (Matches(TokenType.Procedure))
                 {
                     block.Body.Add(ParseProcedure());
-                } while (Matches(TokenType.Procedure));
+                }
+                else
+                {
+                    break;
+                }
             }
 
             Node statement = ParseStatement();

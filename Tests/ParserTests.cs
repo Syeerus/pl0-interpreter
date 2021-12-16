@@ -153,5 +153,14 @@ namespace Tests
             ProgramNode program = parser.Parse();
             Console.WriteLine(program);
         }
+
+        [TestMethod]
+        public void ConstVarTest()
+        {
+            var parser = new Parser("const max = 100; var a;.");
+            Console.WriteLine("Parsing \"" + parser.Source + "\"");
+            ProgramNode program = parser.Parse();
+            Console.WriteLine(program);
+        }
     }
 }
