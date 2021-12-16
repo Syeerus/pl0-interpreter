@@ -216,7 +216,13 @@ namespace Interpreter
         /// </summary>
         private void CreateScope()
         {
-            _scopes.Push(new Scope());
+            Scope parent = null;
+            if (_scopes.Count > 0)
+            {
+                parent = _scopes.Peek();
+            }
+
+            _scopes.Push(new Scope(parent));
         }
 
         /// <summary>
