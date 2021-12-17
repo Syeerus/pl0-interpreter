@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Evaluator.cs" />
     <Compile Include="Parser\AST\ExitNode.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scope.cs" />
     <Compile Include="Parser\AST\AssignmentStatementNode.cs" />
     <Compile Include="Parser\AST\BeginStatementNode.cs" />
