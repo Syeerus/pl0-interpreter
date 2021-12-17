@@ -26,9 +26,6 @@ namespace Interpreter.Parser.AST
 {
     /// <summary>
     /// Denotes the end of the program.
-    /// NOTE: This is not guaranteed to be present, as I'm mostly using it
-    /// to allow inputting lines of code at the console without prematurely
-    /// exiting the program.
     /// </summary>
     public class ExitNode : Node
     {

@@ -123,6 +123,12 @@ namespace Interpreter.Parser
                 Advance();
             }
 
+            if (Matches(TokenType.Dot) && block.Body.Count > 0 && block.Body[block.Body.Count - 1].GetType() != typeof(ExitNode))
+            {
+                // Make sure an exit node is added to the end.
+                block.Body.Add(new ExitNode(0, 1, 1));
+            }
+
             return block;
         }
 
