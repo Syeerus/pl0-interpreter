@@ -23,6 +23,8 @@
  */
 
 using System;
+using System.IO;
+using System.Reflection;
 using Interpreter.Errors;
 using Interpreter.Parser.AST;
 
@@ -131,7 +133,18 @@ namespace Interpreter
         /// </summary>
         private static void ShowHelp()
         {
-            throw new NotImplementedException();
+            string assemblyName = typeof(Interpreter).Assembly.GetName().Name;
+            Console.WriteLine("An interpreter for an extended version of the PL/0 language.");
+            Console.WriteLine();
+            Console.WriteLine($"usage: {assemblyName}.exe [options] filename");
+            Console.WriteLine($"       {assemblyName}.exe [options]");
+            Console.WriteLine();
+            Console.WriteLine("Options");
+            Console.WriteLine();
+            Console.WriteLine("-d, --debug          Enables debug mode.");
+            Console.WriteLine("-p, --prompt         Enters in prompt mode.");
+            Console.WriteLine("-h, --help           Print this help message.");
+            Console.WriteLine("-v, --version        Print the version info.");
         }
 
         /// <summary>
@@ -139,7 +152,8 @@ namespace Interpreter
         /// </summary>
         private static void ShowVersion()
         {
-            throw new NotImplementedException();
+            AssemblyName assemblyName = typeof(Interpreter).Assembly.GetName();
+            Console.WriteLine($"{assemblyName.Name} v{assemblyName.Version}");
         }
 
         /// <summary>
@@ -189,11 +203,11 @@ namespace Interpreter
                 {
                     if (ex is ParseError || ex is RuntimeError)
                     {
-                        Console.WriteLine($"{ex.GetType().Name}: {ex}");
+                        Console.Error.WriteLine($"{ex.GetType().Name}: {ex}");
                     }
                     else
                     {
-                        Console.WriteLine($"ERROR: {ex.Message}");
+                        Console.Error.WriteLine($"ERROR: {ex.Message}");
                     }
                 }
             }
@@ -205,7 +219,32 @@ namespace Interpreter
         /// <param name="options">Options to use.</param>
         private static void EnterFileMode(Options options)
         {
-            throw new NotImplementedException();
+            StreamReader reader = null;
+            try
+            {
+                reader = File.OpenText(options.FileName);
+                var evaluator = new Evaluator();
+                evaluator.IsDebugMode = options.IsDebugMode;
+                evaluator.Run(reader.ReadToEnd());
+            }
+            catch (Exception ex)
+            {
+                if (ex is ParseError || ex is RuntimeError)
+                {
+                    Console.Error.WriteLine($"{ex.GetType().Name}: {ex}");
+                }
+                else
+                {
+                    Console.Error.WriteLine($"An error occured: {ex.Message}");
+                }
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+            }
         }
     }
 }
