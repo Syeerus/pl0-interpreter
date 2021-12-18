@@ -172,7 +172,7 @@ namespace Tests
             var scanner = new Scanner("'Hello\\t\\nworld.'");
             Token[] expected =
             {
-                new Token(TokenType.StringLiteral, 0, 1, 1, "Hello\\t\\nworld.")
+                new Token(TokenType.StringLiteral, 0, 1, 1, "Hello\t\nworld.")
             };
             TokensAreEqual(scanner, expected);
         }
