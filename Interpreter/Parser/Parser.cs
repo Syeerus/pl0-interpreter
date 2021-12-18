@@ -134,42 +134,6 @@ namespace Interpreter.Parser
         }
 
         /// <summary>
-        /// Checks if a token is an unary operator.
-        /// </summary>
-        /// <param name="token">Token to check.</param>
-        /// <returns>If the token is an unary operator.</returns>
-        private static bool IsUnaryOperator(Token token)
-        {
-            switch (token.Type)
-            {
-                case TokenType.Plus:
-                case TokenType.Minus:
-                    return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Checks if a token is a binary operator.
-        /// </summary>
-        /// <param name="token">Token to check.</param>
-        /// <returns>If the token is a binary operator.</returns>
-        private static bool IsBinaryOperator(Token token)
-        {
-            switch (token.Type)
-            {
-                case TokenType.Plus:
-                case TokenType.Minus:
-                case TokenType.Star:
-                case TokenType.Slash:
-                    return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
         /// Checks if a token is a conditional operator.
         /// </summary>
         /// <param name="token">Token to check.</param>
