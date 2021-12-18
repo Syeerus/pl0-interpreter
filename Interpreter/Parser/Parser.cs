@@ -395,38 +395,47 @@ namespace Interpreter.Parser
         {
             Node left = null;
             Token t = _currentToken;
-            if (IsUnaryOperator(t))
+            // Unary
+            switch (t.Type)
             {
-                var unary = new UnaryExpressionNode(t.Offset, t.Line, t.Column);
-                unary.Operator = (UnaryOperator)t.Type;
-                Advance();
-                if (IsUnaryOperator(_currentToken))
+                case TokenType.Plus:
+                case TokenType.Minus:
                 {
-                    unary.Expression = ParseExpression();
-                    return unary;
+                    var unary = new UnaryExpressionNode(t.Offset, t.Line, t.Column);
+                    unary.Operator = (UnaryOperator)t.Type;
+                    Advance();
+                    unary.Expression = ParseTerm();
+                    left = unary;
+                    break;
                 }
-
-                unary.Expression = ParseTerm();
-                left = unary;
-            }
-            else
-            {
-                left = ParseTerm();
+                default:
+                    left = ParseTerm();
+                    break;
             }
 
-            if (IsUnaryOperator(_currentToken))
+            // Binary
+            switch (_currentToken.Type)
             {
-                var binary = new BinaryExpressionNode(t.Offset, t.Line, t.Column);
-                t = _currentToken;
-                binary.Left = left;
-                binary.Operator = (BinaryOperator)t.Type;
-                Advance();
-                binary.Right = ParseExpression();
-                return binary;
-            }
-            else
-            {
-                return left;
+                case TokenType.Plus:
+                case TokenType.Minus:
+                {
+                    var binary = new BinaryExpressionNode(t.Offset, t.Line, t.Column);
+                    t = _currentToken;
+                    binary.Left = left;
+                    binary.Operator = (BinaryOperator)t.Type;
+                    Advance();
+                    binary.Right = ParseExpression();
+                    switch (_currentToken.Type)
+                    {
+                        case TokenType.Plus:
+                        case TokenType.Minus:
+                            return ParseTerm(binary);
+                    }
+
+                    return binary;
+                }
+                default:
+                    return left;
             }
 
             throw new SyntaxError(t.Line, t.Column, "Expected expression.");
@@ -438,19 +447,33 @@ namespace Interpreter.Parser
         /// <returns>A node representing a term.</returns>
         /// <exception cref="SyntaxError">Raised on a syntax error.</exception>
         /// <exception cref="UnterminatedStringError">Raised if an unterminated string is encountered.</exception>
-        private Node ParseTerm()
+        private Node ParseTerm(Node left = null)
         {
             Token t = _currentToken;
-            Node left = ParseFactor();
-            if (IsBinaryOperator(_currentToken))
+            if (left == null)
             {
-                var binary = new BinaryExpressionNode(t.Offset, t.Line, t.Column);
-                t = _currentToken;
-                binary.Left = left;
-                binary.Operator = (BinaryOperator)t.Type;
-                Advance();
-                binary.Right = ParseTerm();
-                return binary;
+                left = ParseFactor();
+            }
+
+            switch (_currentToken.Type)
+            {
+                case TokenType.Star:
+                case TokenType.Slash:
+                {
+                    var bin = new BinaryExpressionNode(t.Offset, t.Line, t.Column);
+                    bin.Left = left;
+                    bin.Operator = (BinaryOperator)_currentToken.Type;
+                    Advance();
+                    bin.Right = ParseFactor();
+                    switch (_currentToken.Type)
+                    {
+                        case TokenType.Star:
+                        case TokenType.Slash:
+                            return ParseTerm(bin);
+                    }
+
+                    return bin;
+                }
             }
 
             return left;
@@ -497,6 +520,16 @@ namespace Interpreter.Parser
                 AssertMatches(TokenType.RightParenthesis);
                 Advance();
                 return node;
+            }
+            else
+            {
+                // Unary
+                switch (t.Type)
+                {
+                    case TokenType.Plus:
+                    case TokenType.Minus:
+                        return ParseExpression();
+                }
             }
 
             throw new SyntaxError(t.Line, t.Column, $"Expected identifier, literal, or expression, but got {t.Type}.");
