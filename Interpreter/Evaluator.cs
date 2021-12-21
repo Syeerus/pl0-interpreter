@@ -232,7 +232,7 @@ namespace Interpreter
         /// <summary>
         /// Creates and sets up a root scope.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A root scope.</returns>
         private Scope CreateRootScope()
         {
             var scope = new Scope();
