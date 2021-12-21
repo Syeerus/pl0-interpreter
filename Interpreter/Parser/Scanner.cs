@@ -226,6 +226,8 @@ namespace Interpreter.Parser
                     return TokenType.Float;
                 case "string":
                     return TokenType.String;
+                case "write":
+                    return TokenType.Write;
             }
 
             return TokenType.Invalid;

@@ -69,7 +69,8 @@ namespace Interpreter.Parser
         Do,
         Int,
         Float,
-        String
+        String,
+        Write
     }
 
     /// <summary>

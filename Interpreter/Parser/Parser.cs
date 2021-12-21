@@ -263,7 +263,7 @@ namespace Interpreter.Parser
                 Advance();
                 return stmt;
             }
-            else if (Matches(TokenType.ExclamationMark))
+            else if (Matches(TokenType.ExclamationMark) || Matches(TokenType.Write))
             {
                 var stmt = new PrintStatementNode(t.Offset, t.Line, t.Column);
                 Advance();
