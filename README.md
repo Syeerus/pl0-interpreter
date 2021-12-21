@@ -25,5 +25,7 @@ Options
  - WRITE keyword or exclamation mark for print statements
  - READ keyword or question mark for input statements
  - Single line comments with hash character.
+ - `__VERSION__` and `__NAME__` predefined constants.
+
 
 Coding conventions used are listed [here](https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions).
