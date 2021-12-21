@@ -228,6 +228,8 @@ namespace Interpreter.Parser
                     return TokenType.String;
                 case "write":
                     return TokenType.Write;
+                case "read":
+                    return TokenType.Read;
             }
 
             return TokenType.Invalid;

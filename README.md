@@ -23,5 +23,6 @@ Options
  - C style typecasting
  - Integer literals can be hexadecimal, binary, or octal numbers ("0x", "0b", and "0" prefixes)
  - WRITE keyword or exclamation mark for print statements.
+ - READ keyword or question mark for input statements.
 
 Coding conventions used are listed [here](https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions).

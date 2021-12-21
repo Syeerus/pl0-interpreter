@@ -253,7 +253,7 @@ namespace Interpreter.Parser
                 Advance();
                 return stmt;
             }
-            else if (Matches(TokenType.QuestionMark))
+            else if (Matches(TokenType.QuestionMark) || Matches(TokenType.Read))
             {
                 var stmt = new InputStatementNode(t.Offset, t.Line, t.Column);
                 t = Advance();
