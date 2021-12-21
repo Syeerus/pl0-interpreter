@@ -170,14 +170,14 @@ namespace Interpreter
                 string input = null;
                 try
                 {
-                    input = Console.ReadLine();
+                    input = Console.ReadLine().Trim();
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"An exception occured: {ex.Message}");
                 }
 
-                if (input == null || input.Trim() == "")
+                if (input == null || input.Length == 0 || input[0] == '#')
                 {
                     continue;
                 }
