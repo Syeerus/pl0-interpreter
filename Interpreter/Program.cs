@@ -177,7 +177,7 @@ namespace Interpreter
                     Console.WriteLine($"An exception occured: {ex.Message}");
                 }
 
-                if (input == null)
+                if (input == null || input.Trim() == "")
                 {
                     continue;
                 }
