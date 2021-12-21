@@ -71,6 +71,7 @@ namespace Interpreter.Parser
         public Token GetNext()
         {
             SkipWhiteSpaceAndComments();
+
             if (IsAtEnd())
             {
                 return CreateToken(TokenType.EndOfSource);
@@ -268,9 +269,27 @@ namespace Interpreter.Parser
         private void SkipWhiteSpaceAndComments()
         {
             var isLooping = true;
-            while (isLooping)
+            while (!IsAtEnd() && isLooping)
             {
                 char c = Read();
+                if (_column == 1)
+                {
+                    // Comments
+                    switch (c)
+                    {
+                        case ' ':
+                            Advance();
+                            break;
+                        case '#':
+                            SkipComment();
+                            break;
+                        default:
+                            break;
+                    }
+
+                    c = Read();
+                }
+
                 switch (c)
                 {
                     case ' ':
@@ -278,10 +297,6 @@ namespace Interpreter.Parser
                     case '\r':
                     case '\n':
                         Advance();
-                        break;
-                    case '#':
-                        SkipComment();
-                        c = Read();
                         break;
                     default:
                         isLooping = false;
