@@ -216,13 +216,29 @@ namespace Interpreter
         /// </summary>
         private void CreateScope()
         {
-            Scope parent = null;
-            if (_scopes.Count > 0)
+            Scope scope;
+            if (_scopes.Count == 0)
             {
-                parent = _scopes.Peek();
+                scope = CreateRootScope();
+            }
+            else
+            {
+                scope = new Scope(_scopes.Peek());
             }
 
-            _scopes.Push(new Scope(parent));
+            _scopes.Push(scope);
+        }
+
+        /// <summary>
+        /// Creates and sets up a root scope.
+        /// </summary>
+        /// <returns></returns>
+        private Scope CreateRootScope()
+        {
+            var scope = new Scope();
+            scope.CreateVar("__VERSION__", Interpreter.GetVersion(), true);
+            scope.CreateVar("__NAME__", Interpreter.GetFileName(), true);
+            return scope;
         }
 
         /// <summary>

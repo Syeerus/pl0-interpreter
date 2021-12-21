@@ -33,7 +33,7 @@ namespace Interpreter
     /// <summary>
     /// The main program class.
     /// </summary>
-    class Interpreter
+    public class Interpreter
     {
         /// <summary>
         /// Command line options.
@@ -66,29 +66,55 @@ namespace Interpreter
             public bool ShowVersion = false;
         }
 
+        private static Options _options;
+
         /// <summary>
         /// Entry point.
         /// </summary>
         /// <param name="args">Command arguments.</param>
         public static void Main(string[] args)
         {
-            Options options = ProcessArgs(args);
-            if (options.ShowHelp || args.Length == 0)
+            _options = ProcessArgs(args);
+            if (_options.ShowHelp || args.Length == 0)
             {
                 ShowHelp();
             }
-            else if (options.ShowVersion)
+            else if (_options.ShowVersion)
             {
                 ShowVersion();
             }
-            else if (options.IsPromptMode)
+            else if (_options.IsPromptMode)
             {
-                EnterPromptMode(options);
+                EnterPromptMode();
             }
             else
             {
-                EnterFileMode(options);
+                EnterFileMode();
             }
+        }
+
+        /// <summary>
+        /// Gets the version of the interpreter.
+        /// </summary>
+        /// <returns>The version of the interpreter.</returns>
+        public static string GetVersion()
+        {
+            AssemblyName assemblyName = typeof(Interpreter).Assembly.GetName();
+            return assemblyName.Version.ToString();
+        }
+
+        /// <summary>
+        /// Gets the file name that was loaded.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetFileName()
+        {
+            if (_options == null || _options.FileName == null)
+            {
+                return "";
+            }
+
+            return _options.FileName;
         }
 
         /// <summary>
@@ -159,11 +185,10 @@ namespace Interpreter
         /// <summary>
         /// Enters into prompt mode.
         /// </summary>
-        /// <param name="options">Options to use.</param>
-        private static void EnterPromptMode(Options options)
+        private static void EnterPromptMode()
         {
             var evaluator = new Evaluator();
-            evaluator.IsDebugMode = options.IsDebugMode;
+            evaluator.IsDebugMode = _options.IsDebugMode;
             while (true)
             {
                 Console.Write(">>> ");
@@ -216,15 +241,14 @@ namespace Interpreter
         /// <summary>
         /// Enters into file mode.
         /// </summary>
-        /// <param name="options">Options to use.</param>
-        private static void EnterFileMode(Options options)
+        private static void EnterFileMode()
         {
             StreamReader reader = null;
             try
             {
-                reader = File.OpenText(options.FileName);
+                reader = File.OpenText(_options.FileName);
                 var evaluator = new Evaluator();
-                evaluator.IsDebugMode = options.IsDebugMode;
+                evaluator.IsDebugMode = _options.IsDebugMode;
                 evaluator.Run(reader.ReadToEnd());
             }
             catch (Exception ex)
