@@ -70,7 +70,7 @@ namespace Interpreter.Parser
         /// <exception cref="UnterminatedStringError">Raised when an unterminated string is encountered.</exception>
         public Token GetNext()
         {
-            SkipWhiteSpace();
+            SkipWhiteSpaceAndComments();
             if (IsAtEnd())
             {
                 return CreateToken(TokenType.EndOfSource);
@@ -263,9 +263,9 @@ namespace Interpreter.Parser
         }
 
         /// <summary>
-        /// Skips white space characters.
+        /// Skips white space characters and comment lines.
         /// </summary>
-        private void SkipWhiteSpace()
+        private void SkipWhiteSpaceAndComments()
         {
             var isLooping = true;
             while (isLooping)
@@ -279,6 +279,10 @@ namespace Interpreter.Parser
                     case '\n':
                         Advance();
                         break;
+                    case '#':
+                        SkipComment();
+                        c = Read();
+                        break;
                     default:
                         isLooping = false;
                         break;
@@ -288,6 +292,17 @@ namespace Interpreter.Parser
                 {
                     Newline();
                 }
+            }
+        }
+
+        /// <summary>
+        /// Skips comments until the end of the line.
+        /// </summary>
+        private void SkipComment()
+        {
+            while (!IsAtEnd() && Read() != '\n')
+            {
+                Advance();
             }
         }
 
